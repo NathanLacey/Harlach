@@ -45,6 +45,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\MyStuff\Scripts\Checkpoint.cs" />
+     <Compile Include="Assets\MyStuff\Scripts\CheckpointManager.cs" />
+     <Compile Include="Assets\MyStuff\Scripts\Player.cs" />
      <Compile Include="Assets\MyStuff\Scripts\Timer.cs" />
      <Compile Include="Assets\MyStuff\Scripts\Trap.cs" />
      <Compile Include="Assets\MyStuff\Scripts\TrapManager.cs" />

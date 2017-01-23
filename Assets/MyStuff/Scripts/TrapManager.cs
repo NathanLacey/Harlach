@@ -10,7 +10,7 @@ public class TrapManager : MonoBehaviour
     List<Trap> AllTraps = new List<Trap>();
     int CurrentTrapIndex = 0;
 
-    void Start()
+    void Awake()
     {
         for(int i = 0; i < transform.childCount; ++i)
         {

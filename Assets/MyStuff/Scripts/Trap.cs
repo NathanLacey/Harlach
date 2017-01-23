@@ -28,4 +28,16 @@ public class Trap : MonoBehaviour
     {
         MyAnimator.SetTrigger("Change");
     }
+
+    //void OnCollisionEnter(Collision collision)
+    //{
+    //    Debug.Log("here");
+    //    if(collision.gameObject.tag == "Player")
+    //    {
+    //        Debug.Log("here2");
+    //        Player playerHit = collision.transform.GetComponent<Player>();
+
+    //        playerHit.Damage(5.0f, DamageType.Melee_Bleeding, 0.5f);
+    //    }
+    //}
 }
