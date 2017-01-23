@@ -9,7 +9,7 @@ public class Trap : MonoBehaviour
     [SerializeField]
     Animator MyAnimator;
     bool StartTrap = false;
-
+    
     public void Initialize()
     {
         StartTrap = true;
