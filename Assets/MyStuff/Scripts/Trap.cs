@@ -3,10 +3,9 @@ using System.Collections;
 
 public class Trap : MonoBehaviour
 {
-    [SerializeField]
     Timer MyTimer = new Timer();
     [SerializeField]
-    float TimeLeft;
+    float TimeInterval;
     [SerializeField]
     Animator MyAnimator;
     bool StartTrap = false;
@@ -14,7 +13,7 @@ public class Trap : MonoBehaviour
     public void Initialize()
     {
         StartTrap = true;
-        MyTimer.Initialize(3.0f);
+        MyTimer.Initialize(TimeInterval);
     }
 
     void Update()
