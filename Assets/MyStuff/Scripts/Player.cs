@@ -100,7 +100,7 @@ public class Player : MonoBehaviour
     {
         if (collider.gameObject.tag == "Trap" && collider.GetComponentInParent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Active"))
         {
-            Damage(5.0f, DamageType.Melee_Bleeding, 1.0f);
+            Damage(collider.GetComponentInParent<Trap>().damageAmount, collider.GetComponentInParent<Trap>().damageType, 1.0f);
         }
     }
 }

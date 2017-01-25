@@ -10,7 +10,25 @@ public class Trap : MonoBehaviour
     [SerializeField]
     List<Animator> MyAnimator = new List<Animator>();
     bool StartTrap = false;
-    
+    [SerializeField]
+    float Damage;
+    [SerializeField]
+    DamageType DamageTypeDealt;
+
+    public float damageAmount
+    {
+        get
+        {
+            return Damage;
+        }
+    }
+    public DamageType damageType
+    {
+        get
+        {
+            return DamageTypeDealt;
+        }
+    }
     public void Initialize()
     {
         StartTrap = true;
