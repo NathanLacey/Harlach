@@ -9,6 +9,8 @@ public class TrapManager : MonoBehaviour
     [SerializeField]
     List<Trap> AllTraps = new List<Trap>();
     int CurrentTrapIndex = 0;
+    [SerializeField]
+    float TimeBetweenTraps;
 
     void Awake()
     {
@@ -20,11 +22,13 @@ public class TrapManager : MonoBehaviour
                 AllTraps.Add(child);
             }
         }
-        TrapStartTimeController.Initialize(0.5f);
+        TrapStartTimeController.Initialize(TimeBetweenTraps);
+        enabled = false;
     }
     
     void Update()
     {
+
         if(CurrentTrapIndex < AllTraps.Count)
         {
             TrapStartTimeController.TimerAction(StartTrap);
@@ -37,4 +41,11 @@ public class TrapManager : MonoBehaviour
         ++CurrentTrapIndex;
     }
 
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.tag == "Player")
+        {
+            enabled = true;
+        }
+    }
 }

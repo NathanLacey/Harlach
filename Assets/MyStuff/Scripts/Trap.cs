@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Trap : MonoBehaviour
 {
@@ -7,13 +8,14 @@ public class Trap : MonoBehaviour
     [SerializeField]
     float TimeInterval;
     [SerializeField]
-    Animator MyAnimator;
+    List<Animator> MyAnimator = new List<Animator>();
     bool StartTrap = false;
     
     public void Initialize()
     {
         StartTrap = true;
         MyTimer.Initialize(TimeInterval);
+        ChangeAnimationState();
     }
 
     void Update()
@@ -26,7 +28,10 @@ public class Trap : MonoBehaviour
 
     void ChangeAnimationState()
     {
-        MyAnimator.SetTrigger("Change");
+        foreach (Animator animatedObject in MyAnimator)
+        {
+            animatedObject.SetTrigger("Change");
+        }
     }
 
     //void OnCollisionEnter(Collision collision)
