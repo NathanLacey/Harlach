@@ -13,9 +13,12 @@ public class Enemy : MonoBehaviour
         MyNavMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    void OnTriggerEnter(Collider collider)
+    void OnTriggerStay(Collider collider)
     {
-        if(collider.gameObject.tag == "Player")
+        Vector3 dir = (collider.transform.position - transform.position).normalized;
+        float direction = Vector3.Dot(dir, transform.forward);
+
+        if(Target == null && collider.gameObject.tag == "Player" && direction > 0)
         {
             Target = collider.transform;
             MyAnimator.SetBool("OnPath", true);
@@ -46,6 +49,8 @@ public class Enemy : MonoBehaviour
     {
         if(Target)
         {
+           // float distance = Vector3.Distance(Target.transform.position, transform.position);
+            
             MyNavMeshAgent.SetDestination(Target.position + Target.forward* 2.0f);
         }
     }
