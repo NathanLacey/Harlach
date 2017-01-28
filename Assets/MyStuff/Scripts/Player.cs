@@ -75,7 +75,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Damage(float amount, DamageType damageType, float invincibilityTime)
+    public void Damage(float amount, DamageType damageType, float invincibilityTime = 1.0f)
     {
         if (IsInvincible)
             return;

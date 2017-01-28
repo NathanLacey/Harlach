@@ -33,6 +33,10 @@ public class TrapManager : MonoBehaviour
         {
             TrapStartTimeController.TimerAction(StartTrap);
         }
+        else
+        {
+            enabled = false;
+        }
     }
 
     void StartTrap()
@@ -43,7 +47,7 @@ public class TrapManager : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.tag == "Player")
+        if (collider.tag == "Player" && CurrentTrapIndex == 0)
         {
             enabled = true;
         }
