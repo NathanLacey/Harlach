@@ -64,15 +64,12 @@ public class Enemy : MonoBehaviour
     void AttackPlayer()
     {
         MyAnimator.SetTrigger("AttackPlayer");
-
-        Player playerTarget = Target.GetComponent<Player>();
-        playerTarget.Damage(AttackValue, DamageType.Melee_Instance);
     }
 
     public void Damage(float amount)
     {
         MyAnimator.SetTrigger("GetHit");
-
+        
         Health -= amount;
         StartCoroutine(BoolSwitchIsBeingHit(0.5f));
     }

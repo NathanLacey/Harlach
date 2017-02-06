@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public enum DamageType { Melee_Instance, Melee_Bleeding };
 public class Player : MonoBehaviour
 {
+    [SerializeField]
+    GameObject MyCanvas;
+
     // TEMPORARY
     void OnGUI()
     {
@@ -34,6 +38,7 @@ public class Player : MonoBehaviour
     {
         BleedingTimer.Initialize(1.0f);
         Respawn();
+        MyCanvas = Instantiate(MyCanvas);
     }
 
     void Respawn()
@@ -59,6 +64,10 @@ public class Player : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.R))
         {
             Respawn();
+        }
+        else if(Input.GetKeyDown(KeyCode.C))
+        {
+            MyCanvas.SetActive(!MyCanvas.activeSelf);
         }
         if(IsBleeding)
         {

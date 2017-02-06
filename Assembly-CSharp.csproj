@@ -47,11 +47,15 @@
   <ItemGroup>
      <Compile Include="Assets\MyStuff\Scripts\Checkpoint.cs" />
      <Compile Include="Assets\MyStuff\Scripts\CheckpointManager.cs" />
+     <Compile Include="Assets\MyStuff\Scripts\Chest.cs" />
      <Compile Include="Assets\MyStuff\Scripts\Enemy.cs" />
+     <Compile Include="Assets\MyStuff\Scripts\ItemPickup.cs" />
+     <Compile Include="Assets\MyStuff\Scripts\ItemSpawner.cs" />
      <Compile Include="Assets\MyStuff\Scripts\Player.cs" />
      <Compile Include="Assets\MyStuff\Scripts\Timer.cs" />
      <Compile Include="Assets\MyStuff\Scripts\Trap.cs" />
      <Compile Include="Assets\MyStuff\Scripts\TrapManager.cs" />
+     <Compile Include="Assets\MyStuff\Scripts\UI\UI_HandWeapons.cs" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
      <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
