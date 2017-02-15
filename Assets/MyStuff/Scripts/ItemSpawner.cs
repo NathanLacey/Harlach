@@ -19,6 +19,8 @@ public class ItemSpawner : MonoBehaviour
     [SerializeField]
     public List<string> FolderNames = new List<string>();
     List<GameObject> AllItems = new List<GameObject>();
+    [SerializeField]
+    ParticleSystem ParticleSystemToSpawn;
 
     void Awake()
     {
@@ -51,5 +53,6 @@ public class ItemSpawner : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         currentItem.SetItem((GameObject)Instantiate(item, new Vector3(spawnPosition.position.x, spawnPosition.position.y + 1.0f, spawnPosition.position.z), Quaternion.identity));
+        currentItem.SetParticleSystem(new Vector3(spawnPosition.position.x + 0.5f, spawnPosition.position.y, spawnPosition.position.z - 2.0f), Quaternion.identity);
     }
 }

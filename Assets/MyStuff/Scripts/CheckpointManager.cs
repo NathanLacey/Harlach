@@ -16,7 +16,7 @@ public class CheckpointManager : MonoBehaviour
 
     [SerializeField]
     List<Checkpoint> AllCheckpoints = new List<Checkpoint>();
-   
+
     void Awake()
     {
         TheInstance = this;

@@ -3,15 +3,28 @@ using System.Collections;
 
 public class Checkpoint : MonoBehaviour
 {
+    [SerializeField]
+    ParticleEffect ParticleSystemToSpawn;
     bool Active = false;
+
+
+    void Update()
+    {
+        if(Active == true)
+        {
+            ParticleSystemToSpawn.ParticleTimerUpdate();
+        }
+    }
 
     public void SetCheckpoint()
     {
+        ParticleSystemToSpawn.Initialize(transform.position, transform.rotation);
         Active = true;
     }
 
     public void UnSetCheckpoint()
     {
+        ParticleSystemToSpawn.Terminate();
         Active = false;
     }
 
@@ -22,7 +35,7 @@ public class Checkpoint : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        if(collider.tag == "Player")
+        if(collider.tag == "Player" && Active == false)
         {
             CheckpointManager.Instance.ClearCheckpoints();
             SetCheckpoint();

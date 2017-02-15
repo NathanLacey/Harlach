@@ -7,6 +7,14 @@ public class Enemy : MonoBehaviour
     Transform Target;
     bool IsBeingHit = false;
 
+    [Header("Non-EnemyValues")]
+    [SerializeField]
+    ParticleEffect DeathEffect;
+    [SerializeField]
+    ItemPickup ItemDropped;
+    [SerializeField]
+    string ItemType;
+
     [Header("Component Values")]
     [SerializeField]
     Animator MyAnimator;
@@ -27,6 +35,22 @@ public class Enemy : MonoBehaviour
     float MaxHealth;
     [SerializeField]
     float Health;
+    float HealthProperty
+    {
+        get
+        {
+            return Health;
+        }
+        set
+        {
+            Health = value;
+            if(Health <= 0)
+            {
+                Health = 0;
+                Die();
+            }
+        }
+    }
     [SerializeField]
     float AttackValue;
     [SerializeField]
@@ -38,7 +62,7 @@ public class Enemy : MonoBehaviour
         MyNavMeshAgent = GetComponent<NavMeshAgent>();
         MyNavMeshAgent.stoppingDistance = AttackingDistance - 1.5f;
         Trigger.size = new Vector3(ViewDistance, ViewDistance * 0.9f, ViewDistance);
-        Health = MaxHealth;
+        HealthProperty = MaxHealth;
     }
 
     void OnTriggerStay(Collider collider)
@@ -64,14 +88,38 @@ public class Enemy : MonoBehaviour
     void AttackPlayer()
     {
         MyAnimator.SetTrigger("AttackPlayer");
+        Damage(100);
     }
 
     public void Damage(float amount)
     {
         MyAnimator.SetTrigger("GetHit");
         
-        Health -= amount;
+        HealthProperty -= amount;
         StartCoroutine(BoolSwitchIsBeingHit(0.5f));
+    }
+
+    void Die()
+    {
+        DeathEffect.Initialize(transform.position, transform.rotation);
+        ItemDropped = (ItemPickup)Instantiate(ItemDropped, transform.position, transform.rotation);
+        ItemSpawner.Instance.SpawnRandomItem(transform, ItemDropped, ItemType);
+
+        MyAnimator.SetBool("Dead", true);
+        StartCoroutine(DeathWait(5.0f));
+    }
+
+    void Shrink()
+    {
+        transform.localScale *= 0.975f;
+    }
+
+    IEnumerator DeathWait(float waitTime)
+    {
+        InvokeRepeating("Shrink", 0.0f, 0.075f);
+        yield return new WaitForSeconds(waitTime);
+        DeathEffect.Terminate(waitTime);
+        Destroy(gameObject);
     }
 
     IEnumerator BoolSwitchIsBeingHit(float waitTime)
@@ -83,7 +131,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if(Target)
+        if(Target && Health > 0.0f)
         {
             MyNavMeshAgent.SetDestination(Target.position);
 

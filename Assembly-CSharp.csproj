@@ -51,11 +51,15 @@
      <Compile Include="Assets\MyStuff\Scripts\Enemy.cs" />
      <Compile Include="Assets\MyStuff\Scripts\ItemPickup.cs" />
      <Compile Include="Assets\MyStuff\Scripts\ItemSpawner.cs" />
+     <Compile Include="Assets\MyStuff\Scripts\MagicEffects.cs" />
+     <Compile Include="Assets\MyStuff\Scripts\ParticleEffect.cs" />
      <Compile Include="Assets\MyStuff\Scripts\Player.cs" />
      <Compile Include="Assets\MyStuff\Scripts\Timer.cs" />
      <Compile Include="Assets\MyStuff\Scripts\Trap.cs" />
      <Compile Include="Assets\MyStuff\Scripts\TrapManager.cs" />
      <Compile Include="Assets\MyStuff\Scripts\UI\UI_HandWeapons.cs" />
+     <Compile Include="Assets\Particle Ribbon\Scripts\ReverseNormals.cs" />
+     <None Include="Assets\3D Items - Wand Pack\Read Me.txt" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
      <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
@@ -63,6 +67,7 @@
      <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
      <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
      <None Include="Assets\Standard Assets\Cameras\CameraGuidelines.txt" />
+     <None Include="Assets\Particle Ribbon\readme_Simple_Particle_Ribbon.txt" />
      <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
      <None Include="Assets\3D Items - Shield Pack\Read Me.txt" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />

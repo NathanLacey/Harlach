@@ -69,6 +69,7 @@ public class Player : MonoBehaviour
         {
             MyCanvas.SetActive(!MyCanvas.activeSelf);
         }
+
         if(IsBleeding)
         {
             BleedingTimer.TimerAction(BleedingDamage);

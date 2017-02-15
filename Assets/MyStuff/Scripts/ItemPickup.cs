@@ -5,6 +5,9 @@ public class ItemPickup : MonoBehaviour
 {
     [SerializeField]
     GameObject SpawnedItem;
+    [SerializeField]
+    ParticleEffect SpawnedParticleSystem;
+
     bool IsItemTaken;
     bool HasItemEvaporated;
     bool IsTimerSet;
@@ -28,6 +31,7 @@ public class ItemPickup : MonoBehaviour
         if(HasItemEvaporated == true)
         {
             Destroy(SpawnedItem);
+            SpawnedParticleSystem.Terminate(3.0f);
             Destroy(gameObject);
         }
         else if (IsItemTaken == true)
@@ -35,6 +39,7 @@ public class ItemPickup : MonoBehaviour
             // Used when the item is taken, but nothing was swapped
             if(SpawnedItem == null)
             {
+                SpawnedParticleSystem.Terminate(3.0f);
                 Destroy(gameObject);
             }
             // Used when the item is swapped with a previously held item
@@ -74,6 +79,11 @@ public class ItemPickup : MonoBehaviour
     {
         SpawnedItem = item;
         IsTimerSet = true;
+    }
+
+    public void SetParticleSystem(Vector3 position, Quaternion rotation)
+    {
+        SpawnedParticleSystem.Initialize(position, rotation);
     }
 
     public bool PickupUpdate(Player activator)
@@ -145,12 +155,26 @@ public class ItemPickup : MonoBehaviour
         Vector3 newPos = parent.position;
         Quaternion newRotate = parent.rotation;
 
-        if (item.tag == "Shield")
+        if (item.tag == "shield")
         {
             newPos = new Vector3(parent.position.x, parent.position.y + 0.3f, parent.position.z);
         }
+        else if(item.tag == "wand")
+        {
+            newPos = new Vector3(parent.position.x, parent.position.y + 0.2f, parent.position.z - 0.3f);
+        }
+
         item.transform.position = newPos;
         item.transform.rotation = newRotate;
         item.transform.parent = parent;
+
+        if(item.tag == "wand")
+        {
+            item.transform.Rotate(new Vector3(1.0f, 0.0f, 0.0f), 80.0f);
+        }
+        else if (item.tag == "sword1h")
+        {
+            item.transform.Rotate(new Vector3(0.0f, 1.0f, 0.0f), 90.0f);
+        }
     }
 }
