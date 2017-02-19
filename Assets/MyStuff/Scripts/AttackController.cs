@@ -18,19 +18,26 @@ public class AttackController : MonoBehaviour
         mMeshTrigger = gameObject.GetComponent<MeshCollider>();
         mAnimator = gameObject.GetComponent<Animator>();
         mItem = gameObject.GetComponent<ItemInfo>();
-        mAnimator.runtimeAnimatorController = Resources.Load("Animators/SwordAnimator") as RuntimeAnimatorController;
-        mAnimator.SetBool("FloatingItem", true);
-    }
-
-    void FixedUpdate()
-    {
-        if (mAnimator.GetBool("IsAttacking"))
+        if (IsSword() == true)
         {
-            StartCoroutine(AttackAnimation());
-
+            LoadAnimator("Animators/SwordAnimator");
         }
-
+        else
+        {
+            LoadAnimator("Animators/ItemAnimator");
+        }
     }
+
+    public void LoadAnimator(string path)
+    {
+        mAnimator.runtimeAnimatorController = Resources.Load(path) as RuntimeAnimatorController;
+    }
+
+    public bool IsSword()
+    {
+        return tag == "sword1h" || tag == "sword2h";
+    }
+
     IEnumerator AttackAnimation()
     {
         yield return new WaitForSeconds(mItem.mAttackSpeed);
@@ -42,8 +49,9 @@ public class AttackController : MonoBehaviour
     {
         //Debug.Log(" Player Attack function is called");
         mAnimator.SetBool("IsAttacking", true);
+        StartCoroutine(AttackAnimation());
     }
-    
+
     void OnTriggerEnter(Collider collider)
     {
 

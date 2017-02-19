@@ -89,6 +89,7 @@
     <Compile Include="Assets\MyStuff\Scripts\Timer.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Trap.cs" />
     <Compile Include="Assets\MyStuff\Scripts\TrapManager.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\UI\UI_Bars.cs" />
     <Compile Include="Assets\MyStuff\Scripts\UI\UI_HandWeapons.cs" />
     <Compile Include="Assets\MyStuff\Scripts\WeaponAttack.cs" />
     <Compile Include="Assets\Particle Ribbon\Scripts\ReverseNormals.cs" />

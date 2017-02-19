@@ -7,16 +7,6 @@ public class Player : MonoBehaviour
 {
     [SerializeField]
     GameObject MyCanvas;
-
-    // TEMPORARY
-    void OnGUI()
-    {
-        GUI.Box(new Rect(Screen.width / 2 - 50, 0, 100, 20), "Health: " + Health);
-    }
-    //
-
-    [SerializeField]
-    float MaxAttackCoolDown;
     [SerializeField]
     Animator mAnimator;
     [SerializeField]
@@ -25,15 +15,19 @@ public class Player : MonoBehaviour
     public AttackController mAttackControllerRight;
     
     Timer BleedingTimer = new Timer();
+    Timer StaminaRegen = new Timer();
+
+    [SerializeField]
+    private float StaminaRegenWait;
     private bool IsBleeding = false;
-    const float MaxHealth = 100.0f;
+    private bool CanRegenStamina = false;
     private float Health;
-    private float AttackCoolDown = 0.0f;
     private float PlayerHealth
     {
         set
         {
             Health = value;
+            UI_Bars.Instance.HealthBar = Health;
             if(Health <= 0.0f)
             {
                 Respawn();
@@ -44,6 +38,26 @@ public class Player : MonoBehaviour
             return Health;
         }
     }
+    private float Stamina;
+    private float PlayerStamina
+    {
+        set
+        {
+            if (value > UI_Bars.MaxStamina)
+                return;
+            if(value < Stamina)
+            {
+                StopAllCoroutines();
+                StartCoroutine(StaminaRegenWindow(StaminaRegenWait));
+            }
+            Stamina = value;
+            UI_Bars.Instance.StaminaBar = Stamina;
+        }
+        get
+        {
+            return Stamina;
+        }
+    }
     private bool IsInvincible = false;
     private bool IsAttacking = false;
     private Transform RightHand;
@@ -52,8 +66,9 @@ public class Player : MonoBehaviour
     void Start()
     {
         BleedingTimer.Initialize(1.0f);
-        Respawn();
+        StaminaRegen.Initialize(0.1f);
         MyCanvas = Instantiate(MyCanvas);
+        Respawn();
         LeftHand = transform.GetChild(0).GetChild(0);
         RightHand = transform.GetChild(0).GetChild(1);
         // For testing
@@ -62,6 +77,7 @@ public class Player : MonoBehaviour
             mAttackControllerRight = RightHand.GetChild(0).GetComponent<AttackController>();
             mAttackControllerRight.transform.GetComponent<Animator>().SetBool("FloatingItem", false);
             UI_HandWeapons.Instance.SetRightHandImage(ImageType.Sword);
+            mAttackControllerRight.LoadAnimator("Animators/SwordAnimator");
         }
         //
     }
@@ -73,7 +89,8 @@ public class Player : MonoBehaviour
         transform.rotation = currentCheckpoint.transform.rotation;
         GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().m_MouseLook.Init(transform, Camera.main.transform);
         IsBleeding = false;
-        Health = MaxHealth;
+        PlayerHealth = UI_Bars.MaxHealth;
+        PlayerStamina = UI_Bars.MaxStamina;
         StartCoroutine(InvincibilityWindow(1.5f));
     }
 
@@ -82,6 +99,13 @@ public class Player : MonoBehaviour
         IsInvincible = true;
         yield return new WaitForSeconds(waitTime);
         IsInvincible = false;
+    }
+
+    IEnumerator StaminaRegenWindow(float waitTime)
+    {
+        CanRegenStamina = false;
+        yield return new WaitForSeconds(waitTime);
+        CanRegenStamina = true;
     }
 
     void FixedUpdate()
@@ -100,19 +124,89 @@ public class Player : MonoBehaviour
             BleedingTimer.TimerAction(BleedingDamage);
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && AttackCoolDown <= 0 && mAttackControllerRight != null)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && CanAttack("RightHand"))
         {
             //Debug.Log("left click attack");
             mAttackControllerRight.Attack();
-            AttackCoolDown = MaxAttackCoolDown;
+            UseWeapon("RightHand");
+            
         }
-        else if(Input.GetKeyDown(KeyCode.Mouse1) && AttackCoolDown <= 0 && mAttackControllerLeft != null)
+        else if(Input.GetKeyDown(KeyCode.Mouse1) && CanAttack("LeftHand"))
         {
             //Debug.Log("left click attack");
             mAttackControllerLeft.Attack();
-            AttackCoolDown = MaxAttackCoolDown;
+            UseWeapon("LeftHand");
         }
-        AttackCoolDown -= Time.deltaTime;
+        else if(CanRegenStamina == true)
+        {
+            StaminaRegen.TimerAction(RegenerateStamina);
+        }
+    }
+
+    void RegenerateStamina()
+    {
+        ++PlayerStamina;
+    }
+
+    bool CanAttack(string hand)
+    {
+        if(hand == "LeftHand")
+        {
+            if (mAttackControllerLeft == null)
+                return false;
+
+            if (mAttackControllerLeft.tag == "sword1h")
+            {
+                return PlayerStamina > UI_Bars.Cost_Stamina_Sword1h;
+            }
+            else if (mAttackControllerLeft.tag == "sword2h")
+            {
+                return PlayerStamina > UI_Bars.Cost_Stamina_Sword2h;
+            }
+        }
+        else if (hand == "RightHand")
+        {
+            if (mAttackControllerRight == null)
+                return false;
+
+            if (mAttackControllerRight.tag == "sword1h")
+            {
+                return PlayerStamina > UI_Bars.Cost_Stamina_Sword1h;
+            }
+            else if(mAttackControllerRight.tag == "sword2h")
+            {
+                return PlayerStamina > UI_Bars.Cost_Stamina_Sword2h;
+            }
+        }
+
+        Debug.Log("[Player::CanAttack] Invalid parameter");
+        return false;
+    }
+
+    void UseWeapon(string hand)
+    {
+        if (hand == "LeftHand")
+        {
+            if (mAttackControllerLeft.tag == "sword1h")
+            {
+                PlayerStamina -= UI_Bars.Cost_Stamina_Sword1h;
+            }
+            else if(mAttackControllerLeft.tag == "sword2h")
+            {
+                PlayerStamina -= UI_Bars.Cost_Stamina_Sword2h;
+            }
+        }
+        else if (hand == "RightHand")
+        {
+            if (mAttackControllerRight.tag == "sword1h")
+            {
+                PlayerStamina -= UI_Bars.Cost_Stamina_Sword1h;
+            }
+            else if (mAttackControllerRight.tag == "sword2h")
+            {
+                PlayerStamina -= UI_Bars.Cost_Stamina_Sword2h;
+            }
+        }
     }
 
     void BleedingDamage()

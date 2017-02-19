@@ -81,7 +81,14 @@ public class ItemPickup : MonoBehaviour
     {
         SpawnedItemParent.position = pos;
         item.transform.parent = SpawnedItemParent;
+        item.transform.localPosition = Vector3.zero;
+        item.transform.localRotation = Quaternion.identity;
         SpawnedItem = item;
+        if(SpawnedItem.GetComponent<AttackController>().IsSword() == false && SpawnedItem.GetComponent<Animator>().runtimeAnimatorController == null)
+        {
+            SpawnedItem.GetComponent<AttackController>().LoadAnimator("Animators/ItemAnimator");
+        }
+        SpawnedItem.GetComponent<AttackController>().GetComponent<Animator>().SetBool("FloatingItem", true);
         IsTimerSet = true;
     }
 
@@ -111,23 +118,29 @@ public class ItemPickup : MonoBehaviour
         {
             Transform leftHand = activator.transform.GetChild(0).GetChild(0);
             GameObject currentItem = SpawnedItem;
+            currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
+            if (currentItem.GetComponent<AttackController>().IsSword() == false)
+            {
+                currentItem.GetComponent<AttackController>().LoadAnimator("NULL");
+            }
             DropCurrentItem(leftHand, activator);
             SetCurrentItemPosition(leftHand, currentItem);
             UI_HandWeapons.Instance.SetLeftHandImage(UI_HandWeapons.Instance.FolderNameToImageType(currentItem.tag));
             SetAttackController(hand, activator, currentItem);
-            if (currentItem.GetComponent<Animator>() != null)
-                currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
         }
         else if (hand == "RightHand")
         {
             Transform rightHand = activator.transform.GetChild(0).GetChild(1);
             GameObject currentItem = SpawnedItem;
+            currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
+            if(currentItem.GetComponent<AttackController>().IsSword() == false)
+            {
+                currentItem.GetComponent<AttackController>().LoadAnimator("NULL");
+            }
             DropCurrentItem(rightHand, activator);
             SetCurrentItemPosition(rightHand, currentItem);
             UI_HandWeapons.Instance.SetRightHandImage(UI_HandWeapons.Instance.FolderNameToImageType(currentItem.tag));
             SetAttackController(hand, activator, currentItem);
-            if (currentItem.GetComponent<Animator>() != null)
-                currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
         }
         else
         {
@@ -159,11 +172,11 @@ public class ItemPickup : MonoBehaviour
 
             if (currentItem != null)
             {
-                // Delete the current item in the player's hand
-                Destroy(currentItem);
+                //// Delete the current item in the player's hand
+                //Destroy(currentItem);
 
-                // Spawn the item on the ground
-                currentItem = Instantiate(currentItem);
+                //// Spawn the item on the ground
+                //currentItem = Instantiate(currentItem);
                 // Reset the pickup timer
                 Reset(2.0f);
                 // Set item to this item pickup script

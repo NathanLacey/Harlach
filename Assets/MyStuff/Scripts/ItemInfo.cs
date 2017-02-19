@@ -22,7 +22,15 @@ public class ItemInfo : MonoBehaviour
         mMeshCollider = GetComponent<MeshCollider>();
         mAnimator = GetComponent<Animator>();
         RandomizeValues();
-        mAnimator.SetFloat("AttackSpeed", mAnimationSpeed);
+        if (IsSword() == true)
+        {
+            mAnimator.SetFloat("AttackSpeed", mAnimationSpeed);
+        }
+    }
+
+    public bool IsSword()
+    {
+        return tag == "sword1h" || tag == "sword2h";
     }
 
     void RandomizeValues()
