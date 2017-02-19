@@ -52,7 +52,7 @@ public class ItemSpawner : MonoBehaviour
     IEnumerator WaitToSpawn(float waitTime, GameObject item, Transform spawnPosition, ItemPickup currentItem)
     {
         yield return new WaitForSeconds(waitTime);
-        currentItem.SetItem((GameObject)Instantiate(item, new Vector3(spawnPosition.position.x, spawnPosition.position.y + 1.0f, spawnPosition.position.z), Quaternion.identity));
+        currentItem.SetItem(Instantiate(item),  new Vector3(spawnPosition.position.x, spawnPosition.position.y + 1.0f, spawnPosition.position.z - 1.0f));
         currentItem.SetParticleSystem(new Vector3(spawnPosition.position.x + 0.5f, spawnPosition.position.y, spawnPosition.position.z - 2.0f), Quaternion.identity);
     }
 }

@@ -6,6 +6,8 @@ public class Enemy : MonoBehaviour
     Timer AttackTimer = new Timer();
     Transform Target;
     bool IsBeingHit = false;
+    private bool IsBleeding = false;
+    private bool IsInvincible = false;
 
     [Header("Non-EnemyValues")]
     [SerializeField]
@@ -72,10 +74,15 @@ public class Enemy : MonoBehaviour
 
         if(Target == null && collider.gameObject.tag == "Player" && direction > 0)
         {
-            Target = collider.transform;
-            MyAnimator.SetBool("OnPath", true);
-            MyAnimator.SetBool("SeesPlayer", true);
+            SeesPlayer(collider.transform);
         }
+    }
+
+    public void SeesPlayer(Transform player)
+    {
+        Target = player;
+        MyAnimator.SetBool("OnPath", true);
+        MyAnimator.SetBool("SeesPlayer", true);
     }
 
     void LosePlayer()
@@ -88,14 +95,28 @@ public class Enemy : MonoBehaviour
     void AttackPlayer()
     {
         MyAnimator.SetTrigger("AttackPlayer");
-        Damage(100);
     }
 
-    public void Damage(float amount)
+    public void Damage(float amount, DamageType damageType, float invincibilityTime = 1.0f)
     {
+        if (IsInvincible)
+            return;
+        StartCoroutine(InvincibilityWindow(invincibilityTime));
         MyAnimator.SetTrigger("GetHit");
-        
-        HealthProperty -= amount;
+        Debug.Log("Enemy Took damage: " + amount);
+        switch (damageType)
+        {
+            case DamageType.Melee_Instance:
+                HealthProperty -= amount;
+                break;
+            case DamageType.Melee_Bleeding:
+                HealthProperty -= amount;
+                IsBleeding = true;
+                break;
+            default:
+                Debug.Log("[Enemy::Damage] Invalid damage type");
+                break;
+        }
         StartCoroutine(BoolSwitchIsBeingHit(0.5f));
     }
 
@@ -112,6 +133,13 @@ public class Enemy : MonoBehaviour
     void Shrink()
     {
         transform.localScale *= 0.975f;
+    }
+
+    IEnumerator InvincibilityWindow(float waitTime)
+    {
+        IsInvincible = true;
+        yield return new WaitForSeconds(waitTime);
+        IsInvincible = false;
     }
 
     IEnumerator DeathWait(float waitTime)

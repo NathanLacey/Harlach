@@ -141,6 +141,8 @@
   <ItemGroup>
     <None Include="Assets\3D Items - Shield Pack\Read Me.txt" />
     <None Include="Assets\3D Items - Sword Pack\Read Me.txt" />
+    <None Include="Assets\3D Items - Wand Pack\Read Me.txt" />
+    <None Include="Assets\Particle Ribbon\readme_Simple_Particle_Ribbon.txt" />
     <None Include="Assets\Standard Assets\Cameras\CameraGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />

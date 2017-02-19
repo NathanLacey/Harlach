@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -81,19 +75,29 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\MyStuff\Scripts\AttackController.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Checkpoint.cs" />
     <Compile Include="Assets\MyStuff\Scripts\CheckpointManager.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Chest.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Enemy.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\ItemInfo.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\ItemPickup.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\ItemSpawner.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\MagicEffects.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\ParticleEffect.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Player.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Timer.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Trap.cs" />
     <Compile Include="Assets\MyStuff\Scripts\TrapManager.cs" />
     <Compile Include="Assets\MyStuff\Scripts\UI\UI_HandWeapons.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\WeaponAttack.cs" />
+    <Compile Include="Assets\Particle Ribbon\Scripts\ReverseNormals.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\3D Items - Shield Pack\Read Me.txt" />
     <None Include="Assets\3D Items - Sword Pack\Read Me.txt" />
+    <None Include="Assets\3D Items - Wand Pack\Read Me.txt" />
+    <None Include="Assets\Particle Ribbon\readme_Simple_Particle_Ribbon.txt" />
     <None Include="Assets\Standard Assets\Cameras\CameraGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class ItemPickup : MonoBehaviour
 {
+    Transform SpawnedItemParent;
     [SerializeField]
     GameObject SpawnedItem;
     [SerializeField]
@@ -15,6 +16,7 @@ public class ItemPickup : MonoBehaviour
 
     void Awake()
     {
+        SpawnedItemParent = transform;
         Reset(5.0f);
     }
 
@@ -75,8 +77,10 @@ public class ItemPickup : MonoBehaviour
         }
     }
 
-    public void SetItem(GameObject item)
+    public void SetItem(GameObject item, Vector3 pos)
     {
+        SpawnedItemParent.position = pos;
+        item.transform.parent = SpawnedItemParent;
         SpawnedItem = item;
         IsTimerSet = true;
     }
@@ -110,6 +114,9 @@ public class ItemPickup : MonoBehaviour
             DropCurrentItem(leftHand, activator);
             SetCurrentItemPosition(leftHand, currentItem);
             UI_HandWeapons.Instance.SetLeftHandImage(UI_HandWeapons.Instance.FolderNameToImageType(currentItem.tag));
+            SetAttackController(hand, activator, currentItem);
+            if (currentItem.GetComponent<Animator>() != null)
+                currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
         }
         else if (hand == "RightHand")
         {
@@ -118,10 +125,29 @@ public class ItemPickup : MonoBehaviour
             DropCurrentItem(rightHand, activator);
             SetCurrentItemPosition(rightHand, currentItem);
             UI_HandWeapons.Instance.SetRightHandImage(UI_HandWeapons.Instance.FolderNameToImageType(currentItem.tag));
+            SetAttackController(hand, activator, currentItem);
+            if (currentItem.GetComponent<Animator>() != null)
+                currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
         }
         else
         {
             Debug.Log("[Chest::GrabItem] Invalid parameter");
+        }
+    }
+
+    void SetAttackController(string hand, Player activator, GameObject currentItem)
+    {
+        if(hand == "LeftHand")
+        {
+            activator.mAttackControllerLeft = currentItem.GetComponent<AttackController>();
+            if (currentItem.tag == "sword1h")
+            {
+                activator.mAttackControllerLeft.GetComponent<Animator>().SetBool("Mirror", true);
+            }
+        }
+        else if(hand == "RightHand")
+        {
+            activator.mAttackControllerRight = currentItem.GetComponent<AttackController>();
         }
     }
 
@@ -137,11 +163,11 @@ public class ItemPickup : MonoBehaviour
                 Destroy(currentItem);
 
                 // Spawn the item on the ground
-                currentItem = (GameObject)Instantiate(currentItem, activator.transform.position + activator.transform.forward, Quaternion.identity);
+                currentItem = Instantiate(currentItem);
                 // Reset the pickup timer
                 Reset(2.0f);
                 // Set item to this item pickup script
-                SetItem(currentItem);
+                SetItem(currentItem, activator.transform.position + activator.transform.forward);
             }
         }
         else

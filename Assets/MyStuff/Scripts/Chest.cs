@@ -9,7 +9,7 @@ public class Chest : MonoBehaviour
     bool IsItemSpawned;
     [SerializeField]
     ItemPickup CurrentItem;
-    [Tooltip("This item type will be the name of the folder used in item spawner. Put any if you don't want to specify the random item type")]
+    [Tooltip("This item type will be the name of the folder used in item spawner. Put 'any' if you don't want to specify the random item type")]
     [SerializeField]
     string ItemType;
 

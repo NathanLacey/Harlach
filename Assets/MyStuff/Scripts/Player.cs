@@ -14,10 +14,21 @@ public class Player : MonoBehaviour
         GUI.Box(new Rect(Screen.width / 2 - 50, 0, 100, 20), "Health: " + Health);
     }
     //
+
+    [SerializeField]
+    float MaxAttackCoolDown;
+    [SerializeField]
+    Animator mAnimator;
+    [SerializeField]
+    public AttackController mAttackControllerLeft;
+    [SerializeField]
+    public AttackController mAttackControllerRight;
+    
     Timer BleedingTimer = new Timer();
     private bool IsBleeding = false;
     const float MaxHealth = 100.0f;
     private float Health;
+    private float AttackCoolDown = 0.0f;
     private float PlayerHealth
     {
         set
@@ -34,11 +45,25 @@ public class Player : MonoBehaviour
         }
     }
     private bool IsInvincible = false;
+    private bool IsAttacking = false;
+    private Transform RightHand;
+    private Transform LeftHand;
+
     void Start()
     {
         BleedingTimer.Initialize(1.0f);
         Respawn();
         MyCanvas = Instantiate(MyCanvas);
+        LeftHand = transform.GetChild(0).GetChild(0);
+        RightHand = transform.GetChild(0).GetChild(1);
+        // For testing
+        if (RightHand.childCount > 0)
+        {
+            mAttackControllerRight = RightHand.GetChild(0).GetComponent<AttackController>();
+            mAttackControllerRight.transform.GetComponent<Animator>().SetBool("FloatingItem", false);
+            UI_HandWeapons.Instance.SetRightHandImage(ImageType.Sword);
+        }
+        //
     }
 
     void Respawn()
@@ -74,6 +99,20 @@ public class Player : MonoBehaviour
         {
             BleedingTimer.TimerAction(BleedingDamage);
         }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) && AttackCoolDown <= 0 && mAttackControllerRight != null)
+        {
+            //Debug.Log("left click attack");
+            mAttackControllerRight.Attack();
+            AttackCoolDown = MaxAttackCoolDown;
+        }
+        else if(Input.GetKeyDown(KeyCode.Mouse1) && AttackCoolDown <= 0 && mAttackControllerLeft != null)
+        {
+            //Debug.Log("left click attack");
+            mAttackControllerLeft.Attack();
+            AttackCoolDown = MaxAttackCoolDown;
+        }
+        AttackCoolDown -= Time.deltaTime;
     }
 
     void BleedingDamage()

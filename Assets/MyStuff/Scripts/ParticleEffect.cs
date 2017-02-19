@@ -25,6 +25,7 @@ public class ParticleEffect : MonoBehaviour
     {
         if (CloneParticleSystem != null)
         {
+            Debug.Log("Terminating");
             CloneParticleSystem.Stop();
             Destroy(CloneParticleSystem.gameObject, waitTime);
         }
