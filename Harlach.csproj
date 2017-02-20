@@ -86,6 +86,9 @@
     <Compile Include="Assets\MyStuff\Scripts\MagicEffects.cs" />
     <Compile Include="Assets\MyStuff\Scripts\ParticleEffect.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Player.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\RoomStuff\Door.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\RoomStuff\Room.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\RoomStuff\RoomManager.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Timer.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Trap.cs" />
     <Compile Include="Assets\MyStuff\Scripts\TrapManager.cs" />
