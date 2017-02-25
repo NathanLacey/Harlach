@@ -122,10 +122,12 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        DeathEffect.Initialize(transform.position, transform.rotation);
-        ItemDropped = (ItemPickup)Instantiate(ItemDropped, transform.position, transform.rotation);
-        ItemSpawner.Instance.SpawnRandomItem(transform, ItemDropped, ItemType);
-
+            DeathEffect.Initialize(transform.position, transform.rotation);
+        if (ItemDropped)
+        {
+            ItemDropped = (ItemPickup)Instantiate(ItemDropped, transform.position, transform.rotation);
+            ItemSpawner.Instance.SpawnRandomItem(transform, ItemDropped, ItemType);
+        }
         MyAnimator.SetBool("Dead", true);
         StartCoroutine(DeathWait(5.0f));
     }
@@ -146,7 +148,8 @@ public class Enemy : MonoBehaviour
     {
         InvokeRepeating("Shrink", 0.0f, 0.075f);
         yield return new WaitForSeconds(waitTime);
-        DeathEffect.Terminate(waitTime);
+        if(DeathEffect)
+            DeathEffect.Terminate(waitTime);
         Destroy(gameObject);
     }
 

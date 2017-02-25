@@ -27,6 +27,7 @@ public class RoomManager : MonoBehaviour
     public List<Room> mRoomList = new List<Room>();
     [SerializeField]
     Room mLastRoom;
+    [SerializeField]
     Room mCurrentRoom;
     public const uint mInitialRoomCount = 10;
     public int mCurrentRoomCount = 0;
