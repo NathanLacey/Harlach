@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour
         }
     }
     [SerializeField]
-    float AttackValue;
+    public float AttackValue;
     [SerializeField]
     float DefenceValue;
 

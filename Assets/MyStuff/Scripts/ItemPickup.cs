@@ -84,9 +84,17 @@ public class ItemPickup : MonoBehaviour
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.identity;
         SpawnedItem = item;
-        if(SpawnedItem.GetComponent<AttackController>().IsSword() == false && SpawnedItem.GetComponent<Animator>().runtimeAnimatorController == null)
+        if (SpawnedItem.GetComponent<ItemInfo>().mWeaponType == WeaponType.Sword)
         {
-            SpawnedItem.GetComponent<AttackController>().LoadAnimator("Animators/ItemAnimator");
+            SpawnedItem.GetComponent<AttackController>().LoadAnimator("Animators/SwordAnimator");
+        }
+        else if (SpawnedItem.GetComponent<ItemInfo>().mWeaponType == WeaponType.Wand)
+        {
+            SpawnedItem.GetComponent<AttackController>().LoadAnimator("Animators/WandAnimator");
+        }
+        else if (SpawnedItem.GetComponent<ItemInfo>().mWeaponType == WeaponType.Shield)
+        {
+            SpawnedItem.GetComponent<AttackController>().LoadAnimator("Animators/ShieldAnimator");
         }
         SpawnedItem.GetComponent<AttackController>().GetComponent<Animator>().SetBool("FloatingItem", true);
         IsTimerSet = true;
@@ -119,11 +127,11 @@ public class ItemPickup : MonoBehaviour
             Transform leftHand = activator.transform.GetChild(0).GetChild(0);
             GameObject currentItem = SpawnedItem;
             currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
-            if (currentItem.GetComponent<AttackController>().IsSword() == false)
-            {
-                currentItem.GetComponent<AttackController>().LoadAnimator("NULL");
-            }
             DropCurrentItem(leftHand, activator);
+
+            leftHand.localPosition = new Vector3(0.8f, -0.7f, 0.8f);
+            if (currentItem.tag == "wand")
+                leftHand.localPosition = new Vector3(leftHand.localPosition.x, leftHand.localPosition.y, 0.0f);
             SetCurrentItemPosition(leftHand, currentItem);
             UI_HandWeapons.Instance.SetLeftHandImage(UI_HandWeapons.Instance.FolderNameToImageType(currentItem.tag));
             SetAttackController(hand, activator, currentItem);
@@ -133,11 +141,10 @@ public class ItemPickup : MonoBehaviour
             Transform rightHand = activator.transform.GetChild(0).GetChild(1);
             GameObject currentItem = SpawnedItem;
             currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
-            if(currentItem.GetComponent<AttackController>().IsSword() == false)
-            {
-                currentItem.GetComponent<AttackController>().LoadAnimator("NULL");
-            }
             DropCurrentItem(rightHand, activator);
+            rightHand.localPosition = new Vector3(0.8f, -0.7f, 0.8f);
+            if (currentItem.tag == "wand")
+                rightHand.localPosition = new Vector3(rightHand.localPosition.x, rightHand.localPosition.y, 0.0f);
             SetCurrentItemPosition(rightHand, currentItem);
             UI_HandWeapons.Instance.SetRightHandImage(UI_HandWeapons.Instance.FolderNameToImageType(currentItem.tag));
             SetAttackController(hand, activator, currentItem);
@@ -153,7 +160,7 @@ public class ItemPickup : MonoBehaviour
         if(hand == "LeftHand")
         {
             activator.mAttackControllerLeft = currentItem.GetComponent<AttackController>();
-            if (currentItem.tag == "sword1h")
+            if (currentItem.tag == "sword1h" || currentItem.tag == "sword2h")
             {
                 activator.mAttackControllerLeft.GetComponent<Animator>().SetBool("Mirror", true);
             }
@@ -194,26 +201,8 @@ public class ItemPickup : MonoBehaviour
         Vector3 newPos = parent.position;
         Quaternion newRotate = parent.rotation;
 
-        if (item.tag == "shield")
-        {
-            newPos = new Vector3(parent.position.x, parent.position.y + 0.3f, parent.position.z);
-        }
-        else if(item.tag == "wand")
-        {
-            newPos = new Vector3(parent.position.x, parent.position.y + 0.2f, parent.position.z - 0.3f);
-        }
-
         item.transform.position = newPos;
         item.transform.rotation = newRotate;
         item.transform.parent = parent;
-
-        if(item.tag == "wand")
-        {
-            item.transform.Rotate(new Vector3(1.0f, 0.0f, 0.0f), 80.0f);
-        }
-        else if (item.tag == "sword1h")
-        {
-            item.transform.Rotate(new Vector3(0.0f, 1.0f, 0.0f), 90.0f);
-        }
     }
 }

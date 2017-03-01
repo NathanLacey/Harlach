@@ -13,19 +13,30 @@ public class AttackController : MonoBehaviour
     [SerializeField]
     ItemInfo mItem;
 
+
+    public float mMaxCoolDown;
+    public float mAttackCoolDown;
+
+
     void Awake()
     {
         mMeshTrigger = gameObject.GetComponent<MeshCollider>();
         mAnimator = gameObject.GetComponent<Animator>();
         mItem = gameObject.GetComponent<ItemInfo>();
-        if (IsSword() == true)
+        if (mItem.mWeaponType == WeaponType.Sword)
         {
             LoadAnimator("Animators/SwordAnimator");
         }
-        else
+        else if (mItem.mWeaponType == WeaponType.Wand)
         {
-            LoadAnimator("Animators/ItemAnimator");
+            LoadAnimator("Animators/WandAnimator");
         }
+        else if (mItem.mWeaponType == WeaponType.Shield)
+        {
+            LoadAnimator("Animators/ShieldAnimator");
+        }
+
+        mMaxCoolDown = 1.5f;
     }
 
     public void LoadAnimator(string path)
@@ -33,11 +44,24 @@ public class AttackController : MonoBehaviour
         mAnimator.runtimeAnimatorController = Resources.Load(path) as RuntimeAnimatorController;
     }
 
-    public bool IsSword()
+    void FixedUpdate()
     {
-        return tag == "sword1h" || tag == "sword2h";
-    }
+        if (mAnimator.GetBool("IsAttacking"))
+        {
+            StartCoroutine(AttackAnimation());
+        }
 
+        if (mAttackCoolDown <= 0 && Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            if (mItem.mWeaponType == WeaponType.Wand)
+            {
+               Attack();
+            }
+            mAttackCoolDown = mMaxCoolDown;
+        }
+        mAttackCoolDown -= Time.deltaTime;
+
+    }
     IEnumerator AttackAnimation()
     {
         yield return new WaitForSeconds(mItem.mAttackSpeed);
@@ -47,21 +71,33 @@ public class AttackController : MonoBehaviour
 
     public void Attack()
     {
-        //Debug.Log(" Player Attack function is called");
         mAnimator.SetBool("IsAttacking", true);
-        StartCoroutine(AttackAnimation());
+
+        if (mItem.mWeaponType == WeaponType.Wand)
+        {
+            mItem.mItemMagicEffects.Attack();
+        }
+
+
     }
 
     void OnTriggerEnter(Collider collider)
     {
-
         //Debug.Log("Player Sword is Touching"+collider.name);
-        if (collider.gameObject.GetComponent<Enemy>() != null && mAnimator.GetCurrentAnimatorStateInfo(0).IsName("OneHandedSword_Swing"))
+        if (mItem.mWeaponType != WeaponType.Wand)
         {
-            Debug.Log("Player Sword is Damaging Enemy");
-            collider.gameObject.GetComponent<Enemy>().Damage(mItem.mAttackValue, DamageType.Melee_Instance);
-            collider.gameObject.GetComponent<Enemy>().SeesPlayer(transform);
+            if (collider.gameObject.GetComponent<Enemy>() != null && mAnimator.GetBool("IsAttacking"))
+            {
+                //Debug.Log("Player is Damaging Enemy");
+                collider.gameObject.GetComponent<Enemy>().Damage(mItem.mAttackValue, DamageType.Melee_Instance);
+                collider.gameObject.GetComponent<Enemy>().SeesPlayer(transform);
+            }
         }
 
+    }
+
+    public bool IsSword()
+    {
+        return mItem.IsSword();
     }
 }

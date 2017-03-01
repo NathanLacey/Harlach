@@ -24,4 +24,14 @@ public class Timer
             TimeLeft = OriginalTime;
         }
     }
+    
+    public void TimerAction(Action<ParticleDeathManager.ParticleDeath> function, ParticleDeathManager.ParticleDeath particle)
+    {
+        TimeLeft -= Time.deltaTime;
+        if (TimeLeft < 0)
+        {
+            function(particle);
+            TimeLeft = OriginalTime;
+        }
+    }
 }

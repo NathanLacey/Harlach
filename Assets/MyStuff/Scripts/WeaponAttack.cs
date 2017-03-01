@@ -17,12 +17,17 @@ public class WeaponAttack : MonoBehaviour
     void Start()
     {
         WeaponTrigger = GetComponent<MeshCollider>();
+        Transform current = transform;
+        Transform parent = transform.parent;
+        while(parent != null)
+        {
+            current = parent;
+            parent = parent.parent;
+        }
+
+        damage = current.GetComponent<Enemy>().AttackValue;
     }
 
-    void Update()
-    {
-        
-    }
     void OnTriggerEnter(Collider collider)
     {
         if (collider.tag == "Player" && mAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))

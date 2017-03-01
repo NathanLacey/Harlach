@@ -72,13 +72,13 @@ public class Player : MonoBehaviour
         LeftHand = transform.GetChild(0).GetChild(0);
         RightHand = transform.GetChild(0).GetChild(1);
         // For testing
-        if (RightHand.childCount > 0)
-        {
-            mAttackControllerRight = RightHand.GetChild(0).GetComponent<AttackController>();
-            mAttackControllerRight.transform.GetComponent<Animator>().SetBool("FloatingItem", false);
-            UI_HandWeapons.Instance.SetRightHandImage(ImageType.Sword);
-            mAttackControllerRight.LoadAnimator("Animators/SwordAnimator");
-        }
+        //if (RightHand.childCount > 0)
+        //{
+        //    mAttackControllerRight = RightHand.GetChild(0).GetComponent<AttackController>();
+        //    mAttackControllerRight.transform.GetComponent<Animator>().SetBool("FloatingItem", false);
+        //    UI_HandWeapons.Instance.SetRightHandImage(ImageType.Sword);
+        //    mAttackControllerRight.LoadAnimator("Animators/SwordAnimator");
+        //}
         //
     }
 
@@ -220,9 +220,9 @@ public class Player : MonoBehaviour
 
     public void Damage(float amount, DamageType damageType, float invincibilityTime = 1.0f)
     {
-        if (IsInvincible)
-            return;
-        StartCoroutine(InvincibilityWindow(invincibilityTime));
+        //if (IsInvincible)
+        //    return;
+        //StartCoroutine(InvincibilityWindow(invincibilityTime));
 
         switch (damageType)
         {
