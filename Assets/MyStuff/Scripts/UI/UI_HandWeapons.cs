@@ -6,6 +6,14 @@ using UnityEngine.UI;
 public enum ImageType { Sword, Shield, Magic, None }
 public class UI_HandWeapons : MonoBehaviour
 {
+    [SerializeField]
+    Text AttackValueLeft;
+    [SerializeField]
+    Text AttackValueRight;
+    [SerializeField]
+    Text DefenceValueLeft;
+    [SerializeField]
+    Text DefenceValueRight;
 
     [SerializeField]
     Image LeftHandWeapon;
@@ -68,4 +76,23 @@ public class UI_HandWeapons : MonoBehaviour
         }
     }
 
+    public void SetAttackValueLeft(int value)
+    {
+        AttackValueLeft.text = value.ToString();
+    }
+
+    public void SetAttackValueRight(int value)
+    {
+        AttackValueRight.text = value.ToString();
+    }
+
+    public void SetDefenceValueLeft(int value)
+    {
+        DefenceValueLeft.text = value.ToString();
+    }
+
+    public void SetDefenceValueRight(int value)
+    {
+        DefenceValueRight.text = value.ToString();
+    }
 }

@@ -13,11 +13,6 @@ public class AttackController : MonoBehaviour
     [SerializeField]
     ItemInfo mItem;
 
-
-    public float mMaxCoolDown;
-    public float mAttackCoolDown;
-
-
     void Awake()
     {
         mMeshTrigger = gameObject.GetComponent<MeshCollider>();
@@ -35,8 +30,6 @@ public class AttackController : MonoBehaviour
         {
             LoadAnimator("Animators/ShieldAnimator");
         }
-
-        mMaxCoolDown = 1.5f;
     }
 
     public void LoadAnimator(string path)
@@ -44,41 +37,21 @@ public class AttackController : MonoBehaviour
         mAnimator.runtimeAnimatorController = Resources.Load(path) as RuntimeAnimatorController;
     }
 
-    void FixedUpdate()
-    {
-        if (mAnimator.GetBool("IsAttacking"))
-        {
-            StartCoroutine(AttackAnimation());
-        }
-
-        if (mAttackCoolDown <= 0 && Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            if (mItem.mWeaponType == WeaponType.Wand)
-            {
-               Attack();
-            }
-            mAttackCoolDown = mMaxCoolDown;
-        }
-        mAttackCoolDown -= Time.deltaTime;
-
-    }
     IEnumerator AttackAnimation()
     {
-        yield return new WaitForSeconds(mItem.mAttackSpeed);
+        yield return new WaitForSeconds(mItem.mAnimationWait);
         mAnimator.SetBool("IsAttacking", false);
-
     }
 
     public void Attack()
     {
         mAnimator.SetBool("IsAttacking", true);
+        StartCoroutine(AttackAnimation());
 
         if (mItem.mWeaponType == WeaponType.Wand)
         {
             mItem.mItemMagicEffects.Attack();
         }
-
-
     }
 
     void OnTriggerEnter(Collider collider)
@@ -89,15 +62,29 @@ public class AttackController : MonoBehaviour
             if (collider.gameObject.GetComponent<Enemy>() != null && mAnimator.GetBool("IsAttacking"))
             {
                 //Debug.Log("Player is Damaging Enemy");
-                collider.gameObject.GetComponent<Enemy>().Damage(mItem.mAttackValue, DamageType.Melee_Instance);
+                collider.gameObject.GetComponent<Enemy>().Damage(mItem.mAttackValue, mItem.mModifierType);
                 collider.gameObject.GetComponent<Enemy>().SeesPlayer(transform);
             }
         }
+    }
 
+    public bool CanAttack()
+    {
+        return mAnimator.GetBool("IsAttacking") == false;
     }
 
     public bool IsSword()
     {
         return mItem.IsSword();
+    }
+
+    public float GetDefenceValue()
+    {
+        return mItem.mDefenseValue;
+    }
+
+    public float GetAttackValue()
+    {
+        return mItem.mAttackValue;
     }
 }

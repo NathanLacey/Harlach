@@ -107,11 +107,20 @@ public class Enemy : MonoBehaviour
         switch (damageType)
         {
             case DamageType.Melee_Instance:
+                amount -= DefenceValue;
+                if (amount < 0.0f)
+                    amount = 1.0f;
                 HealthProperty -= amount;
                 break;
             case DamageType.Melee_Bleeding:
+                amount -= DefenceValue;
+                if (amount < 0.0f)
+                    amount = 1.0f;
                 HealthProperty -= amount;
                 IsBleeding = true;
+                break;
+            case DamageType.Magic_Instance:
+                HealthProperty -= amount;
                 break;
             default:
                 Debug.Log("[Enemy::Damage] Invalid damage type");
@@ -122,7 +131,7 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-            DeathEffect.Initialize(transform.position, transform.rotation);
+        DeathEffect.Initialize(transform.position, transform.rotation);
         if (ItemDropped)
         {
             ItemDropped = (ItemPickup)Instantiate(ItemDropped, transform.position, transform.rotation);

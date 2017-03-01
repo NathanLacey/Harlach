@@ -129,9 +129,17 @@ public class ItemPickup : MonoBehaviour
             currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
             DropCurrentItem(leftHand, activator);
 
-            leftHand.localPosition = new Vector3(0.8f, -0.7f, 0.8f);
-            if (currentItem.tag == "wand")
+            leftHand.localPosition = ItemSpawner.Left_Pos_Sword;
+            if (currentItem.tag == "shield")
+            {
+                leftHand.localPosition = ItemSpawner.Left_Pos_Shield;
+                leftHand.Rotate(new Vector3(1.0f, 0.0f, 0.0f), 20.0f);
+            }
+            else if (currentItem.tag == "wand")
+            {
                 leftHand.localPosition = new Vector3(leftHand.localPosition.x, leftHand.localPosition.y, 0.0f);
+            }
+
             SetCurrentItemPosition(leftHand, currentItem);
             UI_HandWeapons.Instance.SetLeftHandImage(UI_HandWeapons.Instance.FolderNameToImageType(currentItem.tag));
             SetAttackController(hand, activator, currentItem);
@@ -142,9 +150,18 @@ public class ItemPickup : MonoBehaviour
             GameObject currentItem = SpawnedItem;
             currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
             DropCurrentItem(rightHand, activator);
-            rightHand.localPosition = new Vector3(0.8f, -0.7f, 0.8f);
-            if (currentItem.tag == "wand")
+
+            rightHand.localPosition = ItemSpawner.Right_Pos_Sword;
+            if(currentItem.tag == "shield")
+            {
+                rightHand.localPosition = ItemSpawner.Right_Pos_Shield;
+                rightHand.Rotate(new Vector3(1.0f, 0.0f, 0.0f), 20.0f);
+            }
+            else if (currentItem.tag == "wand")
+            {
                 rightHand.localPosition = new Vector3(rightHand.localPosition.x, rightHand.localPosition.y, 0.0f);
+            }
+
             SetCurrentItemPosition(rightHand, currentItem);
             UI_HandWeapons.Instance.SetRightHandImage(UI_HandWeapons.Instance.FolderNameToImageType(currentItem.tag));
             SetAttackController(hand, activator, currentItem);
@@ -153,13 +170,20 @@ public class ItemPickup : MonoBehaviour
         {
             Debug.Log("[Chest::GrabItem] Invalid parameter");
         }
+
+        activator.UpdateValues();
     }
+
 
     void SetAttackController(string hand, Player activator, GameObject currentItem)
     {
         if(hand == "LeftHand")
         {
             activator.mAttackControllerLeft = currentItem.GetComponent<AttackController>();
+            if (currentItem.tag != "wand")
+            {
+                activator.mAttackControllerLeft.GetComponent<Animator>().SetBool("Mirror", false);
+            }
             if (currentItem.tag == "sword1h" || currentItem.tag == "sword2h")
             {
                 activator.mAttackControllerLeft.GetComponent<Animator>().SetBool("Mirror", true);
@@ -168,6 +192,14 @@ public class ItemPickup : MonoBehaviour
         else if(hand == "RightHand")
         {
             activator.mAttackControllerRight = currentItem.GetComponent<AttackController>();
+            if (currentItem.tag != "wand")
+            {
+                activator.mAttackControllerRight.GetComponent<Animator>().SetBool("Mirror", false);
+            }
+            if (currentItem.tag == "shield")
+            {
+                activator.mAttackControllerRight.GetComponent<Animator>().SetBool("Mirror", true);
+            }
         }
     }
 

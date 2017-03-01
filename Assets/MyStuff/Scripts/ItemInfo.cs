@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-public enum WeaponType { Sword, Wand, Shield};
+public enum WeaponType { Sword, Wand, Shield };
 public class ItemInfo : MonoBehaviour
 {
 
@@ -16,7 +16,7 @@ public class ItemInfo : MonoBehaviour
     public float mDefenseValue;
     // The higher it is the faster you will swing
     public float mAttackSpeed;
-    public float mAnimationSpeed;
+    public float mAnimationWait;
     public MagicEffects mItemMagicEffects;
     public DamageType mModifierType;
     public WeaponType mWeaponType;
@@ -25,12 +25,8 @@ public class ItemInfo : MonoBehaviour
     {
         mMeshCollider = GetComponent<MeshCollider>();
         mAnimator = GetComponent<Animator>();
-        mAttackValue = Random.Range(1 + (SceneManager.GetActiveScene().buildIndex * 3), 10 + (SceneManager.GetActiveScene().buildIndex * 3));
-        mDefenseValue = Random.Range(1 + (SceneManager.GetActiveScene().buildIndex * 3), 10 + (SceneManager.GetActiveScene().buildIndex * 3));
-        mAttackSpeed = 0.0f; /*Random.Range(1.0f + 0.1f, 1.0f + 1.4f);*/
-        mAnimationSpeed = 0.7f;
-        mAnimator.SetFloat("AttackSpeed", mAnimationSpeed);
-        mModifierType = DamageType.Melee_Instance; /*(DamageType)Random.Range(0, ????????);change later to max size of enum */
+        RandomizeValues();
+        mAnimator.SetFloat("AttackSpeed", mAttackSpeed);
         if(IsSword())
         {
             mWeaponType = WeaponType.Sword;
@@ -39,12 +35,10 @@ public class ItemInfo : MonoBehaviour
         {
             mWeaponType = WeaponType.Wand;
             mItemMagicEffects = transform.GetChild(0).GetComponent<MagicEffects>();
-
         }
         else if(gameObject.tag == "shield")
         {
             mWeaponType = WeaponType.Shield;
-            mAttackValue *= 0.5f;
         }
     }
     void RandomizeValues()
@@ -52,17 +46,32 @@ public class ItemInfo : MonoBehaviour
         if (tag == "sword1h")
         {
             mAttackValue = Random.Range(1 + (SceneManager.GetActiveScene().buildIndex * 3), 10 + (SceneManager.GetActiveScene().buildIndex * 3));
-            mDefenseValue = Random.Range(1 + (SceneManager.GetActiveScene().buildIndex * 3), 10 + (SceneManager.GetActiveScene().buildIndex * 3));
-            mAttackSpeed = 0.0f; /*Random.Range(1.0f + 0.1f, 1.0f + 1.4f);*/
-            mAnimationSpeed = 1.2f;
+            mDefenseValue = 0.0f;
+            mAttackSpeed = 1.2f; /*Random.Range(1.0f + 0.1f, 1.0f + 1.4f);*/
+            mAnimationWait = 1.0f;
         }
         else if (tag == "sword2h")
         {
             mAttackValue = Random.Range(3 + (SceneManager.GetActiveScene().buildIndex * 3), 10 + (SceneManager.GetActiveScene().buildIndex * 3));
-            mDefenseValue = Random.Range(3 + (SceneManager.GetActiveScene().buildIndex * 3), 10 + (SceneManager.GetActiveScene().buildIndex * 3));
-            mAttackSpeed = 0.0f; /*Random.Range(1.0f + 0.1f, 1.0f + 1.4f);*/
-            mAnimationSpeed = 0.7f;
+            mDefenseValue = Random.Range(1 + (SceneManager.GetActiveScene().buildIndex * 3), 5 + (SceneManager.GetActiveScene().buildIndex * 3));
+            mAttackSpeed = 0.7f;
+            mAnimationWait = 1.0f;
         }
+        else if(tag == "wand")
+        {
+            mAttackValue = Random.Range(1 + (SceneManager.GetActiveScene().buildIndex * 3), 10 + (SceneManager.GetActiveScene().buildIndex * 3));
+            mDefenseValue = 0.0f;
+            mAttackSpeed = 1.0f;
+            mAnimationWait = 0.5f;
+        }
+        else if(tag == "shield")
+        {
+            mAttackValue = Random.Range(1 + (SceneManager.GetActiveScene().buildIndex * 3), 5 + (SceneManager.GetActiveScene().buildIndex * 3));
+            mDefenseValue = Random.Range(3 + (SceneManager.GetActiveScene().buildIndex * 3), 10 + (SceneManager.GetActiveScene().buildIndex * 3));
+            mAttackSpeed = 0.9f;
+            mAnimationWait = 0.5f;
+        }
+        
     }
 
     public bool IsSword()

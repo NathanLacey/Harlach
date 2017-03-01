@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public enum DamageType { Melee_Instance, Melee_Bleeding };
+public enum DamageType { Melee_Instance, Melee_Bleeding, Magic_Instance };
 public class Player : MonoBehaviour
 {
     [SerializeField]
@@ -16,11 +16,15 @@ public class Player : MonoBehaviour
     
     Timer BleedingTimer = new Timer();
     Timer StaminaRegen = new Timer();
+    Timer ManaRegen = new Timer();
 
     [SerializeField]
     private float StaminaRegenWait;
+    [SerializeField]
+    private float ManaRegenWait;
     private bool IsBleeding = false;
     private bool CanRegenStamina = false;
+    private bool CanRegenMana = false;
     private float Health;
     private float PlayerHealth
     {
@@ -58,6 +62,41 @@ public class Player : MonoBehaviour
             return Stamina;
         }
     }
+    private float Mana;
+    private float PlayerMana
+    {
+        set
+        {
+            if (value > UI_Bars.MaxMana)
+                return;
+            if(value < Mana)
+            {
+                StopAllCoroutines();
+                StartCoroutine(ManaRegenWindow(ManaRegenWait));
+            }
+            Mana = value;
+            UI_Bars.Instance.ManaBar = Mana;
+        }
+        get
+        {
+            return Mana;
+        }
+    }
+    [SerializeField]
+    private float Defence = 0.0f;
+    public float PlayerDefence
+    {
+        set
+        {
+            if (value < 0.0f)
+                return;
+            Defence = value;
+        }
+        get
+        {
+            return Defence;
+        }
+    }
     private bool IsInvincible = false;
     private bool IsAttacking = false;
     private Transform RightHand;
@@ -67,19 +106,21 @@ public class Player : MonoBehaviour
     {
         BleedingTimer.Initialize(1.0f);
         StaminaRegen.Initialize(0.1f);
+        ManaRegen.Initialize(0.1f);
         MyCanvas = Instantiate(MyCanvas);
         Respawn();
         LeftHand = transform.GetChild(0).GetChild(0);
         RightHand = transform.GetChild(0).GetChild(1);
         // For testing
-        //if (RightHand.childCount > 0)
-        //{
-        //    mAttackControllerRight = RightHand.GetChild(0).GetComponent<AttackController>();
-        //    mAttackControllerRight.transform.GetComponent<Animator>().SetBool("FloatingItem", false);
-        //    UI_HandWeapons.Instance.SetRightHandImage(ImageType.Sword);
-        //    mAttackControllerRight.LoadAnimator("Animators/SwordAnimator");
-        //}
-        //
+        if (RightHand.childCount > 0)
+        {
+            mAttackControllerRight = RightHand.GetChild(0).GetComponent<AttackController>();
+            mAttackControllerRight.transform.GetComponent<Animator>().SetBool("FloatingItem", false);
+            UI_HandWeapons.Instance.SetRightHandImage(ImageType.Sword);
+            mAttackControllerRight.LoadAnimator("Animators/SwordAnimator");
+            UpdateValues();
+        }
+
     }
 
     void Respawn()
@@ -91,8 +132,10 @@ public class Player : MonoBehaviour
         IsBleeding = false;
         PlayerHealth = UI_Bars.MaxHealth;
         PlayerStamina = UI_Bars.MaxStamina;
+        PlayerMana = UI_Bars.MaxMana;
         StartCoroutine(InvincibilityWindow(1.5f));
     }
+
 
     IEnumerator InvincibilityWindow(float waitTime)
     {
@@ -106,6 +149,13 @@ public class Player : MonoBehaviour
         CanRegenStamina = false;
         yield return new WaitForSeconds(waitTime);
         CanRegenStamina = true;
+    }
+
+    IEnumerator ManaRegenWindow(float waitTime)
+    {
+        CanRegenMana = false;
+        yield return new WaitForSeconds(waitTime);
+        CanRegenMana = true;
     }
 
     void FixedUpdate()
@@ -133,13 +183,17 @@ public class Player : MonoBehaviour
         }
         else if(Input.GetKeyDown(KeyCode.Mouse1) && CanAttack("LeftHand"))
         {
-            //Debug.Log("left click attack");
+            //Debug.Log("right click attack");
             mAttackControllerLeft.Attack();
             UseWeapon("LeftHand");
         }
-        else if(CanRegenStamina == true)
+        if(CanRegenStamina == true)
         {
             StaminaRegen.TimerAction(RegenerateStamina);
+        }
+        if(CanRegenMana == true)
+        {
+            ManaRegen.TimerAction(RegenerateMana);
         }
     }
 
@@ -148,11 +202,18 @@ public class Player : MonoBehaviour
         ++PlayerStamina;
     }
 
+    void RegenerateMana()
+    {
+        ++PlayerMana;
+    }
+
     bool CanAttack(string hand)
     {
         if(hand == "LeftHand")
         {
             if (mAttackControllerLeft == null)
+                return false;
+            if (mAttackControllerLeft.CanAttack() == false)
                 return false;
 
             if (mAttackControllerLeft.tag == "sword1h")
@@ -163,10 +224,20 @@ public class Player : MonoBehaviour
             {
                 return PlayerStamina > UI_Bars.Cost_Stamina_Sword2h;
             }
+            else if(mAttackControllerLeft.tag == "shield")
+            {
+                return PlayerStamina > UI_Bars.Cost_Stamina_Shield;
+            }
+            else if(mAttackControllerLeft.tag == "wand")
+            {
+                return PlayerMana > UI_Bars.Cost_Mana_Wand;
+            }
         }
         else if (hand == "RightHand")
         {
             if (mAttackControllerRight == null)
+                return false;
+            if (mAttackControllerRight.CanAttack() == false)
                 return false;
 
             if (mAttackControllerRight.tag == "sword1h")
@@ -176,6 +247,14 @@ public class Player : MonoBehaviour
             else if(mAttackControllerRight.tag == "sword2h")
             {
                 return PlayerStamina > UI_Bars.Cost_Stamina_Sword2h;
+            }
+            else if (mAttackControllerRight.tag == "shield")
+            {
+                return PlayerStamina > UI_Bars.Cost_Stamina_Shield;
+            }
+            else if (mAttackControllerRight.tag == "wand")
+            {
+                return PlayerMana > UI_Bars.Cost_Mana_Wand;
             }
         }
 
@@ -195,6 +274,14 @@ public class Player : MonoBehaviour
             {
                 PlayerStamina -= UI_Bars.Cost_Stamina_Sword2h;
             }
+            else if(mAttackControllerLeft.tag == "shield")
+            {
+                PlayerStamina -= UI_Bars.Cost_Stamina_Shield;
+            }
+            else if(mAttackControllerLeft.tag == "wand")
+            {
+                PlayerMana -= UI_Bars.Cost_Mana_Wand;
+            }
         }
         else if (hand == "RightHand")
         {
@@ -205,6 +292,14 @@ public class Player : MonoBehaviour
             else if (mAttackControllerRight.tag == "sword2h")
             {
                 PlayerStamina -= UI_Bars.Cost_Stamina_Sword2h;
+            }
+            else if (mAttackControllerRight.tag == "shield")
+            {
+                PlayerStamina -= UI_Bars.Cost_Stamina_Shield;
+            }
+            else if (mAttackControllerRight.tag == "wand")
+            {
+                PlayerMana -= UI_Bars.Cost_Mana_Wand;
             }
         }
     }
@@ -220,18 +315,27 @@ public class Player : MonoBehaviour
 
     public void Damage(float amount, DamageType damageType, float invincibilityTime = 1.0f)
     {
-        //if (IsInvincible)
-        //    return;
-        //StartCoroutine(InvincibilityWindow(invincibilityTime));
+        if (IsInvincible)
+            return;
+        StartCoroutine(InvincibilityWindow(invincibilityTime));
 
         switch (damageType)
         {
             case DamageType.Melee_Instance:
+                amount -= PlayerDefence;
+                if (amount < 0.0f)
+                    amount = 1.0f;
                 PlayerHealth -= amount;
                 break;
             case DamageType.Melee_Bleeding:
+                amount -= PlayerDefence;
+                if (amount < 0.0f)
+                    amount = 1.0f;
                 PlayerHealth -= amount;
                 IsBleeding = true;
+                break;
+            case DamageType.Magic_Instance:
+                PlayerHealth -= amount;
                 break;
             default:
                 Debug.Log("[Player::Damage] Invalid damage type");
@@ -244,6 +348,35 @@ public class Player : MonoBehaviour
         if (collider.gameObject.tag == "Trap" && collider.GetComponentInParent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Active"))
         {
             Damage(collider.GetComponentInParent<Trap>().damageAmount, collider.GetComponentInParent<Trap>().damageType, 1.0f);
+        }
+    }
+
+    void UpdateDefenceValue()
+    {
+        float totalDefence = 0.0f;
+
+        if(mAttackControllerLeft)
+            totalDefence += mAttackControllerLeft.GetDefenceValue();
+        if(mAttackControllerRight)
+            totalDefence += mAttackControllerRight.GetDefenceValue();
+
+        PlayerDefence = totalDefence;
+    }
+
+    public void UpdateValues()
+    {
+        UpdateDefenceValue();
+
+        if (mAttackControllerLeft)
+        {
+            UI_HandWeapons.Instance.SetAttackValueLeft((int)mAttackControllerLeft.GetAttackValue());
+            UI_HandWeapons.Instance.SetDefenceValueLeft((int)mAttackControllerLeft.GetDefenceValue());
+        }
+
+        if(mAttackControllerRight)
+        {
+            UI_HandWeapons.Instance.SetAttackValueRight((int)mAttackControllerRight.GetAttackValue());
+            UI_HandWeapons.Instance.SetDefenceValueRight((int)mAttackControllerRight.GetDefenceValue());
         }
     }
 }

@@ -9,6 +9,8 @@ public class UI_Bars : MonoBehaviour
     public const float MaxMana = 100.0f;
     public const float Cost_Stamina_Sword1h = 10.0f;
     public const float Cost_Stamina_Sword2h = 20.0f;
+    public const float Cost_Stamina_Shield = 4.0f;
+    public const float Cost_Mana_Wand = 20.0f;
 
     [SerializeField]
     Image ImgHealth;

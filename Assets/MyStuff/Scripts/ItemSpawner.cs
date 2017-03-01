@@ -14,6 +14,12 @@ public class ItemSpawner : MonoBehaviour
             return TheInstance;
         }
     }
+
+    public static Vector3 Right_Pos_Sword = new Vector3(0.8f, -0.7f, 0.8f);
+    public static Vector3 Left_Pos_Sword = new Vector3(-0.8f, -0.7f, 0.8f);
+
+    public static Vector3 Left_Pos_Shield = new Vector3(-0.5f, -0.7f, 0.5f);
+    public static Vector3 Right_Pos_Shield = new Vector3(0.5f, -0.7f, 0.5f);
     [Tooltip("Sword, then shield, then magic")]
     [Header("SpawnableItems")]
     [SerializeField]
