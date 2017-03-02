@@ -65,7 +65,7 @@ public class RoomManager : MonoBehaviour
     void GenerateRoom(Room room, Vector3 position)
     {
         // Initialize room
-        room.transform.position = position;
+        room.transform.position += position;
         room.GenerateDoors();
         //// Check each door in the room and if it connects to another room then make it active
         //foreach(Door door in room.GetAllDoors())
@@ -89,10 +89,12 @@ public class RoomManager : MonoBehaviour
 
     public void ChangeRoom(Room room, Transform player)
     {
-        Debug.Log("HERE");
         // Check through room to see which door connects to the current room
         Transform teleportPoint = room.GetDoor(mCurrentRoom).transform;
+        // Start Enemy Spawner on the room you are entering and stop the one from the room you are leaving
+        mCurrentRoom.SpawnerTerminate();
         mCurrentRoom = room;
+        mCurrentRoom.SpawnerInitialize();
         // Do some sort of fading out fading in screen
         // Move player's position to that of the door, but turned away from the door
         player.transform.position = teleportPoint.position;

@@ -5,6 +5,7 @@ public class ParticleEffect : MonoBehaviour
 {
     [SerializeField]
     ParticleSystem Effect;
+    [SerializeField]
     ParticleSystem CloneParticleSystem;
     Timer ParticleEvaporationTimer = new Timer();
     [SerializeField]
@@ -14,9 +15,10 @@ public class ParticleEffect : MonoBehaviour
 
     public void Initialize(Vector3 position, Quaternion rotation)
     {
-        CloneParticleSystem = (ParticleSystem)Instantiate(Effect, position, rotation);
+        CloneParticleSystem = Instantiate(Effect, position, rotation) as ParticleSystem;
+        Debug.Log(CloneParticleSystem);
         CloneParticleSystem.transform.localScale *= 3.0f;
-        CloneParticleSystem.Play();
+        Play();
         EvaporateParticleSystem = false;
         ParticleEvaporationTimer.Initialize(LifetimeOfParticle);
     }
@@ -25,19 +27,19 @@ public class ParticleEffect : MonoBehaviour
     {
         if (CloneParticleSystem != null)
         {
-            CloneParticleSystem.Stop();
-            Destroy(CloneParticleSystem.gameObject, waitTime);
+            CloneParticleSystem.GetComponent<ParticleSystem>().Stop();
+            Destroy(CloneParticleSystem, waitTime);
         }
     }
 
     public void Play()
     {
-        CloneParticleSystem.Play();
+        CloneParticleSystem.GetComponent<ParticleSystem>().Play();
     }
 
     public void Stop()
     {
-        CloneParticleSystem.Stop();
+        CloneParticleSystem.GetComponent<ParticleSystem>().Stop();
     }
 
     public void ParticleTimerUpdate()
@@ -47,7 +49,7 @@ public class ParticleEffect : MonoBehaviour
             ParticleEvaporationTimer.TimerAction(EvaporateParticle);
             if (EvaporateParticleSystem == true)
             {
-                CloneParticleSystem.Stop();
+                Stop();
             }
         }
     }

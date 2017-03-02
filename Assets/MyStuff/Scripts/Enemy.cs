@@ -3,6 +3,13 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
+    public const float mEnemyHealthMin = 10.0f;
+    public const float mEnemyHealthMax = 20.0f;
+    public const float mEnemyDefenceMin = 0.0f;
+    public const float mEnemyDefenceMax = 5.0f;
+    public const float mEnemyAttackMin = 3.0f;
+    public const float mEnemyAttackMax = 5.0f;
+
     Timer AttackTimer = new Timer();
     Transform Target;
     bool IsBeingHit = false;
@@ -23,6 +30,8 @@ public class Enemy : MonoBehaviour
     NavMeshAgent MyNavMeshAgent;
     [SerializeField]
     BoxCollider Trigger;
+    [SerializeField]
+    WeaponAttack Sword;
 
     [Header("AI Values")]
     [SerializeField]
@@ -190,5 +199,15 @@ public class Enemy : MonoBehaviour
                 MyAnimator.SetTrigger("ChasePlayer");
             }
         }
+    }
+
+    public void GenerateValues(Room.RoomDifficulty difficulty)
+    {
+        MaxHealth = Random.Range(mEnemyHealthMin, mEnemyHealthMax) * (float)difficulty;
+        HealthProperty = MaxHealth;
+        DefenceValue = Random.Range(mEnemyDefenceMin, mEnemyDefenceMax) * (float)difficulty;
+        AttackValue = Random.Range(mEnemyAttackMin, mEnemyAttackMax) * (float)difficulty;
+
+        Sword.SetDamage();
     }
 }

@@ -129,6 +129,7 @@ public class ItemPickup : MonoBehaviour
             currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
             DropCurrentItem(leftHand, activator);
 
+            leftHand.localRotation = Quaternion.identity;
             leftHand.localPosition = ItemSpawner.Left_Pos_Sword;
             if (currentItem.tag == "shield")
             {
@@ -139,6 +140,12 @@ public class ItemPickup : MonoBehaviour
             {
                 leftHand.localPosition = new Vector3(leftHand.localPosition.x, leftHand.localPosition.y, 0.0f);
             }
+            
+            //if(currentItem.GetComponent<ItemInfo>().IsBackwards == true)
+            //{
+            //    leftHand.Rotate(Vector3.forward, 180);
+            //    leftHand.Rotate(Vector3.up, 180);
+            //}
 
             SetCurrentItemPosition(leftHand, currentItem);
             UI_HandWeapons.Instance.SetLeftHandImage(UI_HandWeapons.Instance.FolderNameToImageType(currentItem.tag));
@@ -151,6 +158,7 @@ public class ItemPickup : MonoBehaviour
             currentItem.GetComponent<Animator>().SetBool("FloatingItem", false);
             DropCurrentItem(rightHand, activator);
 
+            rightHand.localRotation = Quaternion.identity;
             rightHand.localPosition = ItemSpawner.Right_Pos_Sword;
             if(currentItem.tag == "shield")
             {

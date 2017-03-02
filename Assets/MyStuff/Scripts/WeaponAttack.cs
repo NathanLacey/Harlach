@@ -6,15 +6,15 @@ public class WeaponAttack : MonoBehaviour
     //
     // This is the enemy attackController for melee, bad naming conventions on my part
     //
-
+    Transform mParent;
     MeshCollider WeaponTrigger;
 
     [SerializeField]
     Animator mAnimator;
     [SerializeField]
-    float damage;
+    float mDamage;
 
-    void Start()
+    void Awake()
     {
         WeaponTrigger = GetComponent<MeshCollider>();
         Transform current = transform;
@@ -24,8 +24,14 @@ public class WeaponAttack : MonoBehaviour
             current = parent;
             parent = parent.parent;
         }
+        mParent = current;
 
-        damage = current.GetComponent<Enemy>().AttackValue;
+        SetDamage();
+    }
+
+    public void SetDamage()
+    {
+        mDamage = mParent.GetComponent<Enemy>().AttackValue;
     }
 
     void OnTriggerEnter(Collider collider)
@@ -33,7 +39,7 @@ public class WeaponAttack : MonoBehaviour
         if (collider.tag == "Player" && mAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
             Debug.Log("Enemy Sword is hitting player");
-            collider.gameObject.GetComponent<Player>().Damage(damage, DamageType.Melee_Instance);
+            collider.gameObject.GetComponent<Player>().Damage(mDamage, DamageType.Melee_Instance);
         }
     }
 

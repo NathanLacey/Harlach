@@ -315,9 +315,9 @@ public class Player : MonoBehaviour
 
     public void Damage(float amount, DamageType damageType, float invincibilityTime = 1.0f)
     {
-        if (IsInvincible)
-            return;
-        StartCoroutine(InvincibilityWindow(invincibilityTime));
+        //if (IsInvincible)
+        //    return;
+        //StartCoroutine(InvincibilityWindow(invincibilityTime));
 
         switch (damageType)
         {

@@ -20,6 +20,8 @@ public class ItemInfo : MonoBehaviour
     public MagicEffects mItemMagicEffects;
     public DamageType mModifierType;
     public WeaponType mWeaponType;
+    // Rotate 180 degrees on X and 180 on Y
+    public bool IsBackwards;
 
 	void Start ()
     {
