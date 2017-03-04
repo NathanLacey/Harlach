@@ -32,10 +32,14 @@ public class Enemy : MonoBehaviour
     BoxCollider Trigger;
     [SerializeField]
     WeaponAttack Sword;
+    [SerializeField]
+    Rigidbody MyRigidBody;
 
     [Header("AI Values")]
     [SerializeField]
     float ViewDistance;
+    [SerializeField]
+    float SoundDistance;
     [SerializeField]
     float AttackingDistance;
     [SerializeField]
@@ -74,17 +78,65 @@ public class Enemy : MonoBehaviour
         MyNavMeshAgent.stoppingDistance = AttackingDistance - 1.5f;
         Trigger.size = new Vector3(ViewDistance, ViewDistance * 0.9f, ViewDistance);
         HealthProperty = MaxHealth;
+        MyRigidBody = GetComponent<Rigidbody>();
     }
 
     void OnTriggerStay(Collider collider)
     {
-        Vector3 dir = (collider.transform.position - transform.position).normalized;
-        float direction = Vector3.Dot(dir, transform.forward);
-
-        if(Target == null && collider.gameObject.tag == "Player" && direction > 0)
+        if (Target == null && collider.gameObject.tag == "Player")
         {
-            SeesPlayer(collider.transform);
+            // negative is behind, positive is in front
+            Vector3 dir = (collider.transform.position - transform.position).normalized;
+            float direction = Vector3.Dot(dir, transform.forward);
+            // For telling when the player is really close to be able to determine sound
+            float distance = Vector3.Distance(collider.transform.position, transform.position);
+
+            if (direction > 0)
+            {
+                SeesPlayer(collider.transform);
+            }
+            else if (Mathf.Abs(distance) < SoundDistance)
+            {
+                TurnTowardsPoint(collider.transform);
+            }
+            
         }
+    }
+
+    void OnTriggerExit(Collider collider)
+    {
+        if(collider.gameObject.tag == "Player")
+        {
+            if (Target == null && MyNavMeshAgent.destination != null)
+            {
+                LosePlayer();
+            }
+        }
+    }
+
+    void TurnTowardsPoint(Transform point)
+    {
+        MyAnimator.SetBool("OnPath", true);
+        // MyNavMeshAgent.SetDestination(point.position - transform.position);
+        
+        //var targetDir = point.position - transform.position;
+        //var forward = transform.forward;
+        //var localTarget = transform.InverseTransformPoint(point.position);
+
+        //float angle = Mathf.Atan2(localTarget.x, localTarget.z) * Mathf.Rad2Deg;
+
+        //Vector3 eulerAngleVelocity = new Vector3(0, angle, 0);
+        //Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime * 5.0f);
+
+        //for (uint i = 0; i < 10; ++i)
+        //{
+        //    MyRigidBody.MoveRotation(MyRigidBody.rotation * deltaRotation);
+        //    MyNavMeshAgent.updateRotation = MyRigidBody.rotation * deltaRotation;
+        //}
+        float rotationSpeed = 5.0f;
+        Vector3 direction = (point.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));    // flattens the vector3
+        MyRigidBody.MoveRotation(Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed));
     }
 
     public void SeesPlayer(Transform player)
@@ -97,6 +149,7 @@ public class Enemy : MonoBehaviour
     void LosePlayer()
     {
         Target = null;
+        MyNavMeshAgent.Stop();
         MyAnimator.SetBool("OnPath", false);
         MyAnimator.SetBool("SeesPlayer", false);
     }
@@ -186,7 +239,7 @@ public class Enemy : MonoBehaviour
 
             float distance = Vector3.Distance(Target.transform.position, transform.position);
 
-            if (distance > ViewDistance)
+            if (Mathf.Abs(distance) > ViewDistance)
             {
                 LosePlayer();
             }
