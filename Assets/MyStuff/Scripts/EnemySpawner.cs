@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -9,7 +10,8 @@ public class EnemySpawner : MonoBehaviour
     GameObject mEnemyWithDrop;
     Room mParent;
     float mTimeBetweenSpawns;
-    
+    List<GameObject> mSpawnedEnemies = new List<GameObject>();
+
     public void Initialize()
     {
         mParent = transform.parent.GetComponent<Room>();
@@ -23,6 +25,10 @@ public class EnemySpawner : MonoBehaviour
     public void Terminate()
     {
         CancelInvoke();
+        foreach (GameObject enemy in mSpawnedEnemies)
+        {
+            Destroy(enemy);
+        }
     }
 
     void GenerateValues()
@@ -43,6 +49,7 @@ public class EnemySpawner : MonoBehaviour
         {
             go = Instantiate(mEnemyToSpawn, transform.position, transform.rotation) as GameObject;
         }
+        mSpawnedEnemies.Add(go);
         Enemy temp = go.GetComponent<Enemy>();
         temp.GenerateValues(mParent.mDifficulty);
     }

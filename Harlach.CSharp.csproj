@@ -118,6 +118,7 @@
     <Compile Include="Assets\MyStuff\Scripts\CheckpointManager.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Chest.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Enemy.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\EnemySpawner.cs" />
     <Compile Include="Assets\MyStuff\Scripts\ItemInfo.cs" />
     <Compile Include="Assets\MyStuff\Scripts\ItemPickup.cs" />
     <Compile Include="Assets\MyStuff\Scripts\ItemSpawner.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Assets\MyStuff\Scripts\TrapManager.cs" />
     <Compile Include="Assets\MyStuff\Scripts\UI\UI_Bars.cs" />
     <Compile Include="Assets\MyStuff\Scripts\UI\UI_HandWeapons.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\WanderBehaviour.cs" />
     <Compile Include="Assets\MyStuff\Scripts\WeaponAttack.cs" />
     <Compile Include="Assets\Particle Ribbon\Scripts\ReverseNormals.cs" />
   </ItemGroup>

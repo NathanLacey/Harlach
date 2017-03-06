@@ -29,6 +29,7 @@ public class CheckpointManager : MonoBehaviour
                 AllCheckpoints.Add(child);
             }
         }
+        ClearCheckpoints();
         if(AllCheckpoints.Count > 0)
         {
             AllCheckpoints[0].SetCheckpoint();

@@ -5,8 +5,9 @@ public class Checkpoint : MonoBehaviour
 {
     [SerializeField]
     ParticleEffect ParticleSystemToSpawn;
+    [SerializeField]
+    ParticleSystem mFireEffect;
     bool Active = false;
-
 
     void Update()
     {
@@ -20,12 +21,15 @@ public class Checkpoint : MonoBehaviour
     {
         ParticleSystemToSpawn.Initialize(transform.position, transform.rotation);
         Active = true;
+        mFireEffect.transform.gameObject.SetActive(true);
+
     }
 
     public void UnSetCheckpoint()
     {
         ParticleSystemToSpawn.Terminate();
         Active = false;
+        mFireEffect.transform.gameObject.SetActive(false);
     }
 
     public bool GetActive()

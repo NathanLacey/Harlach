@@ -58,6 +58,12 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -129,6 +135,8 @@
     <Compile Include="Assets\MyStuff\Scripts\TrapManager.cs" />
     <Compile Include="Assets\MyStuff\Scripts\UI\UI_Bars.cs" />
     <Compile Include="Assets\MyStuff\Scripts\UI\UI_HandWeapons.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\UI\UI_ScreenFadeout.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\WanderBehaviour.cs" />
     <Compile Include="Assets\MyStuff\Scripts\WeaponAttack.cs" />
     <Compile Include="Assets\Particle Ribbon\Scripts\ReverseNormals.cs" />
   </ItemGroup>

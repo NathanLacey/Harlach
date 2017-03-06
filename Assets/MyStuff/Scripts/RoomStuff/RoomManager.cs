@@ -28,7 +28,9 @@ public class RoomManager : MonoBehaviour
     [SerializeField]
     Room mLastRoom;
     [SerializeField]
+    Room mStartRoom;
     Room mCurrentRoom;
+
     public const uint mInitialRoomCount = 10;
     public int mCurrentRoomCount = 0;
     public Vector3 mPositionOffset;
@@ -40,7 +42,8 @@ public class RoomManager : MonoBehaviour
         // Load in all possible rooms
         mAllRooms.AddRange(Resources.LoadAll<Room>("Rooms"));
         // Instantiate All rooms
-        for(int i = 0; i < mInitialRoomCount - 1; ++i)
+        mRoomList.Add((Room)Instantiate(mStartRoom));
+        for(int i = 1; i < mInitialRoomCount - 1; ++i)
         {
             mRoomList.Add((Room)Instantiate(GetRandomNullRoom()));
         }
@@ -96,7 +99,14 @@ public class RoomManager : MonoBehaviour
         mCurrentRoom = room;
         mCurrentRoom.SpawnerInitialize();
         // Do some sort of fading out fading in screen
+        UI_ScreenFadeout.Instance.Fade(2.5f);
         // Move player's position to that of the door, but turned away from the door
+        StartCoroutine(TransportPlayer(1.2f, player, teleportPoint));
+    }
+
+    IEnumerator TransportPlayer(float waitTime, Transform player, Transform teleportPoint)
+    {
+        yield return new WaitForSeconds(waitTime);
         player.transform.position = teleportPoint.position;
     }
 }

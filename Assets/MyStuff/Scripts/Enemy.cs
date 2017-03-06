@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour
     bool IsBeingHit = false;
     private bool IsBleeding = false;
     private bool IsInvincible = false;
+    private bool HasHeard = false;
 
     [Header("Non-EnemyValues")]
     [SerializeField]
@@ -23,7 +24,7 @@ public class Enemy : MonoBehaviour
     ItemPickup ItemDropped;
     [SerializeField]
     string ItemType;
-
+    
     [Header("Component Values")]
     [SerializeField]
     Animator MyAnimator;
@@ -34,12 +35,16 @@ public class Enemy : MonoBehaviour
     WeaponAttack Sword;
     [SerializeField]
     Rigidbody MyRigidBody;
+    [SerializeField]
+    WanderBehaviour WanderScript;
 
     [Header("AI Values")]
     [SerializeField]
     float ViewDistance;
     [SerializeField]
     float SoundDistance;
+    [SerializeField]
+    float TurnSpeed;
     [SerializeField]
     float AttackingDistance;
     [SerializeField]
@@ -73,12 +78,16 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
+        WanderScript = GetComponent<WanderBehaviour>();
+        if (WanderScript)
+            WanderScript.StopWandering();
         AttackTimer.Initialize(TimeBetweenAttacks);
         MyNavMeshAgent = GetComponent<NavMeshAgent>();
         MyNavMeshAgent.stoppingDistance = AttackingDistance - 1.5f;
         Trigger.size = new Vector3(ViewDistance, ViewDistance * 0.9f, ViewDistance);
         HealthProperty = MaxHealth;
         MyRigidBody = GetComponent<Rigidbody>();
+        MyNavMeshAgent.updateRotation = true;
     }
 
     void OnTriggerStay(Collider collider)
@@ -91,15 +100,28 @@ public class Enemy : MonoBehaviour
             // For telling when the player is really close to be able to determine sound
             float distance = Vector3.Distance(collider.transform.position, transform.position);
 
+            if(Mathf.Abs(distance) < SoundDistance)
+            {
+                HasHeard = true;
+            }
             if (direction > 0)
             {
                 SeesPlayer(collider.transform);
             }
-            else if (Mathf.Abs(distance) < SoundDistance)
+            else if (HasHeard == true)
             {
                 TurnTowardsPoint(collider.transform);
             }
+            else
+            {
+                MyAnimator.SetBool("OnPath", false);
+            }
             
+        }
+        else if(Target == null && WanderScript != null && WanderScript.IsWandering == false)
+        {
+            MyAnimator.SetBool("OnPath", true);
+            WanderScript.enabled = true;
         }
     }
 
@@ -116,9 +138,10 @@ public class Enemy : MonoBehaviour
 
     void TurnTowardsPoint(Transform point)
     {
+        StartCoroutine(BoolSwitchHasHeard(2.0f));
         MyAnimator.SetBool("OnPath", true);
-        // MyNavMeshAgent.SetDestination(point.position - transform.position);
-        
+        //MyNavMeshAgent.SetDestination(transform.position + transform.forward * -1.0f);
+       // MyNavMeshAgent.SetDestination(transform.position + (point.position - transform.position));
         //var targetDir = point.position - transform.position;
         //var forward = transform.forward;
         //var localTarget = transform.InverseTransformPoint(point.position);
@@ -128,20 +151,20 @@ public class Enemy : MonoBehaviour
         //Vector3 eulerAngleVelocity = new Vector3(0, angle, 0);
         //Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime * 5.0f);
 
-        //for (uint i = 0; i < 10; ++i)
-        //{
-        //    MyRigidBody.MoveRotation(MyRigidBody.rotation * deltaRotation);
-        //    MyNavMeshAgent.updateRotation = MyRigidBody.rotation * deltaRotation;
-        //}
-        float rotationSpeed = 5.0f;
-        Vector3 direction = (point.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));    // flattens the vector3
-        MyRigidBody.MoveRotation(Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed));
+        //MyRigidBody.MoveRotation(MyRigidBody.rotation * deltaRotation);
+
+        //float rotationSpeed = 5.0f;
+        //Vector3 direction = (point.position - transform.position).normalized;
+        //Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));    // flattens the vector3
+        //MyRigidBody.MoveRotation(Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed));
+        transform.Rotate(Vector3.up, Time.deltaTime * TurnSpeed, Space.World);
     }
 
     public void SeesPlayer(Transform player)
     {
         Target = player;
+        if(WanderScript)
+            WanderScript.StopWandering();
         MyAnimator.SetBool("OnPath", true);
         MyAnimator.SetBool("SeesPlayer", true);
     }
@@ -231,6 +254,12 @@ public class Enemy : MonoBehaviour
         IsBeingHit = false;
     }
 
+    IEnumerator BoolSwitchHasHeard(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        HasHeard = false;
+    }
+
     void Update()
     {
         if(Target && Health > 0.0f)
@@ -263,4 +292,5 @@ public class Enemy : MonoBehaviour
 
         Sword.SetDamage();
     }
+
 }

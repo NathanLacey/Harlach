@@ -126,7 +126,7 @@ public class Player : MonoBehaviour
     void Respawn()
     {
         Checkpoint currentCheckpoint = CheckpointManager.Instance.GetCurrentCheckpoint();
-        transform.position = currentCheckpoint.transform.position;
+        transform.position = currentCheckpoint.transform.position + currentCheckpoint.transform.forward * 2.0f;
         transform.rotation = currentCheckpoint.transform.rotation;
         GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().m_MouseLook.Init(transform, Camera.main.transform);
         IsBleeding = false;
