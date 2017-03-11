@@ -99,7 +99,7 @@ public class RoomManager : MonoBehaviour
         mCurrentRoom = room;
         mCurrentRoom.SpawnerInitialize();
         // Do some sort of fading out fading in screen
-        UI_ScreenFadeout.Instance.Fade(2.5f);
+        UI_ScreenFadeout.Instance.Fade(10.0f);
         // Move player's position to that of the door, but turned away from the door
         StartCoroutine(TransportPlayer(1.2f, player, teleportPoint));
     }

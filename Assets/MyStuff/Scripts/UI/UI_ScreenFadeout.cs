@@ -60,6 +60,7 @@ public class UI_ScreenFadeout : MonoBehaviour
 
     public void Fade(float fadeSpeed = 1.0f)
     {
+        mFadeSpeed = fadeSpeed;
         IsFadingBlack = true;
         enabled = true;
     }
