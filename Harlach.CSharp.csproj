@@ -127,6 +127,7 @@
     <Compile Include="Assets\MyStuff\Scripts\ParticleDeathManager.cs" />
     <Compile Include="Assets\MyStuff\Scripts\ParticleEffect.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Player.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\RespawnPoint.cs" />
     <Compile Include="Assets\MyStuff\Scripts\RoomStuff\Door.cs" />
     <Compile Include="Assets\MyStuff\Scripts\RoomStuff\Room.cs" />
     <Compile Include="Assets\MyStuff\Scripts\RoomStuff\RoomManager.cs" />
@@ -135,8 +136,10 @@
     <Compile Include="Assets\MyStuff\Scripts\TrapManager.cs" />
     <Compile Include="Assets\MyStuff\Scripts\UI\UI_Bars.cs" />
     <Compile Include="Assets\MyStuff\Scripts\UI\UI_HandWeapons.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\UI\UI_ScreenFadeout.cs" />
     <Compile Include="Assets\MyStuff\Scripts\WanderBehaviour.cs" />
     <Compile Include="Assets\MyStuff\Scripts\WeaponAttack.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\WeaponCamera.cs" />
     <Compile Include="Assets\Particle Ribbon\Scripts\ReverseNormals.cs" />
   </ItemGroup>
   <ItemGroup>

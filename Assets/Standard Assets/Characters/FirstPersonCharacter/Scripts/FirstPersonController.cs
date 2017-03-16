@@ -28,6 +28,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
 
+        [SerializeField]
+        private Camera m_OverlayCamera;
         private Camera m_Camera;
         private bool m_Jump;
         private float m_YRotation;
@@ -198,6 +200,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 newCameraPosition.y = m_OriginalCameraPosition.y - m_JumpBob.Offset();
             }
             m_Camera.transform.localPosition = newCameraPosition;
+
+            m_OverlayCamera.transform.localPosition = newCameraPosition;
         }
 
 
@@ -237,6 +241,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void RotateView()
         {
             m_MouseLook.LookRotation (transform, m_Camera.transform);
+            m_OverlayCamera.transform.localRotation = m_Camera.transform.localRotation;
         }
 
 

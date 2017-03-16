@@ -58,8 +58,8 @@ public class AttackController : MonoBehaviour
     {
         //Debug.Log("Player Sword is Touching"+collider.name);
         if (mItem.mWeaponType != WeaponType.Wand)
-        {
-            if (collider.gameObject.GetComponent<Enemy>() != null && mAnimator.GetBool("IsAttacking"))
+        { 
+            if (collider.isTrigger == false && collider.gameObject.GetComponent<Enemy>() != null && mAnimator.GetBool("IsAttacking"))
             {
                 //Debug.Log("Player is Damaging Enemy");
                 collider.gameObject.GetComponent<Enemy>().Damage(mItem.mAttackValue, mItem.mModifierType);

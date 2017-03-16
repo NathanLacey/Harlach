@@ -50,4 +50,9 @@ public class Door : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
         KeyWait = true;
     }
+
+    public void SetInactive()
+    {
+        gameObject.SetActive(false);
+    }
 }

@@ -123,7 +123,7 @@ public class Player : MonoBehaviour
 
     }
 
-    void Respawn()
+    public void Respawn()
     {
         Checkpoint currentCheckpoint = CheckpointManager.Instance.GetCurrentCheckpoint();
         transform.position = currentCheckpoint.transform.position + currentCheckpoint.transform.forward * 2.0f;

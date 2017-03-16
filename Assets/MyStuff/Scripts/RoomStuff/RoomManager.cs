@@ -17,9 +17,11 @@ public class RoomManager : MonoBehaviour
     void Awake()
     {
         TheInstance = this;
+        GetRoomsFromResources();
         GenerateRoomArray();
     }
     //
+
     // All the rooms from the resources folder
     [SerializeField]
     List<Room> mAllRooms = new List<Room>();
@@ -30,23 +32,52 @@ public class RoomManager : MonoBehaviour
     [SerializeField]
     Room mStartRoom;
     Room mCurrentRoom;
+    public Door mDoorConnectingToStartRoom;
 
-    public const uint mInitialRoomCount = 10;
+    [SerializeField]
+    bool mInstantiateFirstRoom;
+    public const uint mInitialRoomCount = 3;
     public int mCurrentRoomCount = 0;
     public Vector3 mPositionOffset;
     
-    void GenerateRoomArray()
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.H))
+        {
+            ClearRoomArray();
+        }
+    }
+
+    public void Generate()
+    {
+        ClearRoomArray();
+        GenerateRoomArray();
+    }
+    void GetRoomsFromResources()
     {
         // Clear possible previous rooms
         mAllRooms.Clear();
         // Load in all possible rooms
         mAllRooms.AddRange(Resources.LoadAll<Room>("Rooms"));
+    }
+
+    void GenerateRoomArray()
+    {
         // Instantiate All rooms
-        mRoomList.Add((Room)Instantiate(mStartRoom));
-        for(int i = 1; i < mInitialRoomCount - 1; ++i)
+        if(mInstantiateFirstRoom == true)
+        {
+            mRoomList.Add((Room)Instantiate(mStartRoom));
+        }
+        else
+        {
+            mRoomList.Add(mStartRoom);
+        }
+
+        for (int i = 1; i < mInitialRoomCount - 1; ++i)
         {
             mRoomList.Add((Room)Instantiate(GetRandomNullRoom()));
         }
+
         mRoomList.Add((Room)Instantiate(mLastRoom));
         mCurrentRoom = mRoomList[0];
         ++mCurrentRoomCount;
@@ -55,7 +86,23 @@ public class RoomManager : MonoBehaviour
         {
             GenerateRoom(mRoomList[i], i * mPositionOffset);
         }
-        
+
+        // For figuring out what door to make inactive
+        mDoorConnectingToStartRoom = mRoomList[0].GetDoor(mRoomList[1]);
+    }
+
+    void ClearRoomArray()
+    {
+        if(mInstantiateFirstRoom == true && mRoomList.Count > 0)
+        {
+            Destroy(mRoomList[0]);
+        }
+        for(int i = 1; i < mRoomList.Count; ++i)
+        {
+            Destroy(mRoomList[i].gameObject);
+        }
+
+        mRoomList.Clear();
     }
 
     public Room IterateRoomlist()
@@ -99,9 +146,9 @@ public class RoomManager : MonoBehaviour
         mCurrentRoom = room;
         mCurrentRoom.SpawnerInitialize();
         // Do some sort of fading out fading in screen
-        UI_ScreenFadeout.Instance.Fade(10.0f);
+        UI_ScreenFadeout.Instance.Fade(15.0f);
         // Move player's position to that of the door, but turned away from the door
-        StartCoroutine(TransportPlayer(1.2f, player, teleportPoint));
+        StartCoroutine(TransportPlayer(1.0f, player, teleportPoint));
     }
 
     IEnumerator TransportPlayer(float waitTime, Transform player, Transform teleportPoint)

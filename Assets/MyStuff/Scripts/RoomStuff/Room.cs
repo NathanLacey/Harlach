@@ -22,7 +22,7 @@ public class Room : MonoBehaviour, ICloneable
     [SerializeField]
     public float mWidth;
     [SerializeField]
-    List<Door> mDoors = new List<Door>();
+    public List<Door> mDoors = new List<Door>();
 
     EnemySpawner mSpawner;
 
