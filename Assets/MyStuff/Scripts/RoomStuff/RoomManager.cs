@@ -31,15 +31,22 @@ public class RoomManager : MonoBehaviour
     Room mLastRoom;
     [SerializeField]
     Room mStartRoom;
+    int mStartRoomCurrentDoor = -1;
     Room mCurrentRoom;
     public Door mDoorConnectingToStartRoom;
 
     [SerializeField]
     bool mInstantiateFirstRoom;
-    public const uint mInitialRoomCount = 3;
+    public const uint mInitialRoomCount = 10;
     public int mCurrentRoomCount = 0;
     public Vector3 mPositionOffset;
     
+    void Start()
+    {
+        // Set the original door to active after the awakes go off
+        mDoorConnectingToStartRoom.gameObject.SetActive(true);
+    }
+
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.H))
@@ -53,6 +60,7 @@ public class RoomManager : MonoBehaviour
         ClearRoomArray();
         GenerateRoomArray();
     }
+
     void GetRoomsFromResources()
     {
         // Clear possible previous rooms
@@ -63,32 +71,49 @@ public class RoomManager : MonoBehaviour
 
     void GenerateRoomArray()
     {
-        // Instantiate All rooms
-        if(mInstantiateFirstRoom == true)
+        ++mStartRoomCurrentDoor;
+        if (mStartRoomCurrentDoor < mStartRoom.mDoors.Count)
         {
-            mRoomList.Add((Room)Instantiate(mStartRoom));
-        }
-        else
-        {
-            mRoomList.Add(mStartRoom);
-        }
+            // Instantiate All rooms
+            if (mInstantiateFirstRoom == true)
+            {
+                mRoomList.Add((Room)Instantiate(mStartRoom));
+            }
+            else
+            {
+                mRoomList.Add(mStartRoom);
+            }
 
-        for (int i = 1; i < mInitialRoomCount - 1; ++i)
-        {
-            mRoomList.Add((Room)Instantiate(GetRandomNullRoom()));
-        }
+            for (int i = 1; i < mInitialRoomCount - 1; ++i)
+            {
+                mRoomList.Add((Room)Instantiate(GetRandomNullRoom()));
+            }
 
-        mRoomList.Add((Room)Instantiate(mLastRoom));
-        mCurrentRoom = mRoomList[0];
-        ++mCurrentRoomCount;
-        // Generate room position and links
-        for(int i = 0; i < mRoomList.Count; ++i)
-        {
-            GenerateRoom(mRoomList[i], i * mPositionOffset);
-        }
+            mRoomList.Add((Room)Instantiate(mLastRoom));
+            mCurrentRoom = mRoomList[0];
+            ++mCurrentRoomCount;
+            // Generate room position and links
+            if (mInstantiateFirstRoom == true)
+            {
+                for (int i = 0; i < mRoomList.Count; ++i)
+                {
+                    GenerateRoom(mRoomList[i], i * mPositionOffset);
+                }
+            }
+            else
+            {
+                mRoomList[0].mDoors[mStartRoomCurrentDoor].RoomLink = RoomManager.Instance.IterateRoomlist();
+                mRoomList[0].mDoors[mStartRoomCurrentDoor].RoomLink.LinkBack(mRoomList[0]);
+                Debug.Log(mRoomList[1].mDoors[0].RoomLink);
+                for (int i = 1; i < mRoomList.Count; ++i)
+                {
+                    GenerateRoom(mRoomList[i], i * mPositionOffset);
+                }
+            }
 
-        // For figuring out what door to make inactive
-        mDoorConnectingToStartRoom = mRoomList[0].GetDoor(mRoomList[1]);
+            // For figuring out what door to make inactive
+            mDoorConnectingToStartRoom = mRoomList[0].mDoors[mStartRoomCurrentDoor];
+        }
     }
 
     void ClearRoomArray()
@@ -102,6 +127,7 @@ public class RoomManager : MonoBehaviour
             Destroy(mRoomList[i].gameObject);
         }
 
+        mCurrentRoomCount = 0;
         mRoomList.Clear();
     }
 
@@ -129,7 +155,22 @@ public class RoomManager : MonoBehaviour
 
     public Room GetRandomNullRoom()
     {
-        return mAllRooms[Random.Range(0, mAllRooms.Count)];
+        Room randomReturnRoom = mAllRooms[Random.Range(0, mAllRooms.Count)];
+
+        if(mStartRoomCurrentDoor > 2)
+        {
+            if (randomReturnRoom.mTreasure == false)
+            {
+                randomReturnRoom = mAllRooms[Random.Range(0, mAllRooms.Count)];
+            }
+            if (randomReturnRoom.mDifficulty == Room.RoomDifficulty.Easy)
+            {
+                randomReturnRoom.mDifficulty = Room.RoomDifficulty.Medium;
+            }
+        }
+
+
+        return randomReturnRoom;
     }
 
     public Room GetRandomExistingRoom()

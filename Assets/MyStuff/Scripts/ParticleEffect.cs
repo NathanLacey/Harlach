@@ -16,7 +16,6 @@ public class ParticleEffect : MonoBehaviour
     public void Initialize(Vector3 position, Quaternion rotation)
     {
         CloneParticleSystem = Instantiate(Effect, position, rotation) as ParticleSystem;
-        Debug.Log(CloneParticleSystem);
         CloneParticleSystem.transform.localScale *= 3.0f;
         Play();
         EvaporateParticleSystem = false;
