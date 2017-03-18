@@ -112,7 +112,7 @@ public class Player : MonoBehaviour
         LeftHand = transform.GetChild(0).GetChild(0);
         RightHand = transform.GetChild(0).GetChild(1);
         // For testing
-        if (RightHand.childCount > 0)
+        if (RightHand.childCount > 0 && RightHand.GetChild(0).gameObject.activeSelf == true)
         {
             mAttackControllerRight = RightHand.GetChild(0).GetComponent<AttackController>();
             mAttackControllerRight.transform.GetComponent<Animator>().SetBool("FloatingItem", false);
