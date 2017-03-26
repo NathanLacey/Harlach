@@ -117,6 +117,8 @@
     <Compile Include="Assets\MyStuff\Scripts\Checkpoint.cs" />
     <Compile Include="Assets\MyStuff\Scripts\CheckpointManager.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Chest.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\DamageTextController.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\DamageTextPopUp.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Enemy.cs" />
     <Compile Include="Assets\MyStuff\Scripts\EnemySpawner.cs" />
     <Compile Include="Assets\MyStuff\Scripts\ItemInfo.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="Assets\MyStuff\Scripts\RoomStuff\RespawnPoint.cs" />
     <Compile Include="Assets\MyStuff\Scripts\RoomStuff\Room.cs" />
     <Compile Include="Assets\MyStuff\Scripts\RoomStuff\RoomManager.cs" />
+    <Compile Include="Assets\MyStuff\Scripts\StartButton.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Timer.cs" />
     <Compile Include="Assets\MyStuff\Scripts\Trap.cs" />
     <Compile Include="Assets\MyStuff\Scripts\TrapManager.cs" />

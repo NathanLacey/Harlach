@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour
     ItemPickup ItemDropped;
     [SerializeField]
     string ItemType;
-    
+
     [Header("Component Values")]
     [SerializeField]
     Animator MyAnimator;
@@ -37,6 +37,8 @@ public class Enemy : MonoBehaviour
     Rigidbody MyRigidBody;
     [SerializeField]
     WanderBehaviour WanderScript;
+    [SerializeField]
+    DamageTextController DamageText;
 
     [Header("AI Values")]
     [SerializeField]
@@ -64,7 +66,7 @@ public class Enemy : MonoBehaviour
         set
         {
             Health = value;
-            if(Health <= 0)
+            if (Health <= 0)
             {
                 Health = 0;
                 Die();
@@ -78,6 +80,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
+        DamageText = GetComponent<DamageTextController>();
         WanderScript = GetComponent<WanderBehaviour>();
         if (WanderScript)
             WanderScript.StopWandering();
@@ -100,7 +103,7 @@ public class Enemy : MonoBehaviour
             // For telling when the player is really close to be able to determine sound
             float distance = Vector3.Distance(collider.transform.position, transform.position);
 
-            if(Mathf.Abs(distance) < SoundDistance)
+            if (Mathf.Abs(distance) < SoundDistance)
             {
                 HasHeard = true;
             }
@@ -116,9 +119,9 @@ public class Enemy : MonoBehaviour
             {
                 MyAnimator.SetBool("OnPath", false);
             }
-            
+
         }
-        else if(Target == null && WanderScript != null && WanderScript.IsWandering == false)
+        else if (Target == null && WanderScript != null && WanderScript.IsWandering == false)
         {
             MyAnimator.SetBool("OnPath", true);
             WanderScript.enabled = true;
@@ -127,7 +130,7 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerExit(Collider collider)
     {
-        if(collider.gameObject.tag == "Player")
+        if (collider.gameObject.tag == "Player")
         {
             if (Target == null && MyNavMeshAgent.destination != null)
             {
@@ -141,7 +144,7 @@ public class Enemy : MonoBehaviour
         StartCoroutine(BoolSwitchHasHeard(2.0f));
         MyAnimator.SetBool("OnPath", true);
         //MyNavMeshAgent.SetDestination(transform.position + transform.forward * -1.0f);
-       // MyNavMeshAgent.SetDestination(transform.position + (point.position - transform.position));
+        // MyNavMeshAgent.SetDestination(transform.position + (point.position - transform.position));
         //var targetDir = point.position - transform.position;
         //var forward = transform.forward;
         //var localTarget = transform.InverseTransformPoint(point.position);
@@ -163,7 +166,7 @@ public class Enemy : MonoBehaviour
     public void SeesPlayer(Transform player)
     {
         Target = player;
-        if(WanderScript)
+        if (WanderScript)
             WanderScript.StopWandering();
         MyAnimator.SetBool("OnPath", true);
         MyAnimator.SetBool("SeesPlayer", true);
@@ -195,16 +198,19 @@ public class Enemy : MonoBehaviour
                 amount -= DefenceValue;
                 if (amount < 0.0f)
                     amount = 1.0f;
+                DamageText.SpawnText(((int)amount).ToString(), transform);
                 HealthProperty -= amount;
                 break;
             case DamageType.Melee_Bleeding:
                 amount -= DefenceValue;
                 if (amount < 0.0f)
                     amount = 1.0f;
+                DamageText.SpawnText(((int)amount).ToString(), transform);
                 HealthProperty -= amount;
                 IsBleeding = true;
                 break;
             case DamageType.Magic_Instance:
+                DamageText.SpawnText(((int)amount).ToString(), transform);
                 HealthProperty -= amount;
                 break;
             default:
@@ -242,7 +248,7 @@ public class Enemy : MonoBehaviour
     {
         InvokeRepeating("Shrink", 0.0f, 0.075f);
         yield return new WaitForSeconds(waitTime);
-        if(DeathEffect)
+        if (DeathEffect)
             DeathEffect.Terminate(waitTime);
         Destroy(gameObject);
     }
@@ -262,7 +268,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if(Target && Health > 0.0f)
+        if (Target && Health > 0.0f)
         {
             MyNavMeshAgent.SetDestination(Target.position);
 
@@ -272,11 +278,11 @@ public class Enemy : MonoBehaviour
             {
                 LosePlayer();
             }
-            else if(distance < AttackingDistance && !IsBeingHit)
+            else if (distance < AttackingDistance && !IsBeingHit)
             {
                 AttackTimer.TimerAction(AttackPlayer);
             }
-            else if(MyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            else if (MyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
             {
                 MyAnimator.SetTrigger("ChasePlayer");
             }

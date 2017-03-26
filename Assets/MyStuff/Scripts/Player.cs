@@ -183,6 +183,7 @@ public class Player : MonoBehaviour
         }
         else if(Input.GetKeyDown(KeyCode.Mouse1) && CanAttack("LeftHand"))
         {
+            mAttackControllerLeft.transform.GetComponent<Animator>().SetBool("IsLeftHand", true);
             //Debug.Log("right click attack");
             mAttackControllerLeft.Attack();
             UseWeapon("LeftHand");

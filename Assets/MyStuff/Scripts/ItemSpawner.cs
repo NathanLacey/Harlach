@@ -61,6 +61,6 @@ public class ItemSpawner : MonoBehaviour
         // 1 is 180 and 0 is 0
         float zChange = spawnPosition.rotation.y == 1 ? 1.0f : -1.0f;
         currentItem.SetItem(Instantiate(item),  new Vector3(spawnPosition.position.x, spawnPosition.position.y + 1.0f, spawnPosition.position.z + zChange));
-        currentItem.SetParticleSystem(new Vector3(spawnPosition.position.x + 0.5f, spawnPosition.position.y, spawnPosition.position.z - 2.0f), Quaternion.identity);
+        currentItem.SetParticleSystem(new Vector3(spawnPosition.position.x, spawnPosition.position.y, spawnPosition.position.z), Quaternion.identity);
     }
 }
