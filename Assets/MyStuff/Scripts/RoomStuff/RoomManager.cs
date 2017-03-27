@@ -104,7 +104,7 @@ public class RoomManager : MonoBehaviour
             {
                 mRoomList[0].mDoors[mStartRoomCurrentDoor].RoomLink = RoomManager.Instance.IterateRoomlist();
                 mRoomList[0].mDoors[mStartRoomCurrentDoor].RoomLink.LinkBack(mRoomList[0]);
-                Debug.Log(mRoomList[1].mDoors[0].RoomLink);
+                //Debug.Log(mRoomList[1].mDoors[0].RoomLink);
                 for (int i = 1; i < mRoomList.Count; ++i)
                 {
                     GenerateRoom(mRoomList[i], i * mPositionOffset);

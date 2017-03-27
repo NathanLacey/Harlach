@@ -7,7 +7,6 @@ public class WeaponAttack : MonoBehaviour
     // This is the enemy attackController for melee, bad naming conventions on my part
     //
     Transform mParent;
-    MeshCollider WeaponTrigger;
 
     [SerializeField]
     Animator mAnimator;
@@ -16,7 +15,6 @@ public class WeaponAttack : MonoBehaviour
 
     void Awake()
     {
-        WeaponTrigger = GetComponent<MeshCollider>();
         Transform current = transform;
         Transform parent = transform.parent;
         while(parent != null)
@@ -38,7 +36,7 @@ public class WeaponAttack : MonoBehaviour
     {
         if (collider.tag == "Player" && mAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
-            Debug.Log("Enemy Sword is hitting player");
+            //Debug.Log("Enemy Sword is hitting player");
             collider.gameObject.GetComponent<Player>().Damage(mDamage, DamageType.Melee_Instance);
         }
     }

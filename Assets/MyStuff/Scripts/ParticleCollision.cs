@@ -15,16 +15,10 @@ public class ParticleCollision : MonoBehaviour
         mPrefabParticle = GetComponent<ParticleSystem>();
         mItem = transform.parent.parent.GetComponent<ItemInfo>();
     }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-	
-	}
 
     void OnParticleCollision(GameObject target)
     {
-        Debug.Log("Checking collision Events");
+        //Debug.Log("Checking collision Events");
         //if it doesn't have an Enemy Script then ignore it
         if (target.GetComponent<Enemy>() != null)
         {

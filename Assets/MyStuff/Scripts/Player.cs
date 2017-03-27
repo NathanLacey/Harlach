@@ -6,6 +6,8 @@ public enum DamageType { Melee_Instance, Melee_Bleeding, Magic_Instance };
 public class Player : MonoBehaviour
 {
     [SerializeField]
+    public Camera mCamera;
+    [SerializeField]
     GameObject MyCanvas;
     [SerializeField]
     Animator mAnimator;
@@ -98,7 +100,6 @@ public class Player : MonoBehaviour
         }
     }
     private bool IsInvincible = false;
-    private bool IsAttacking = false;
     private Transform RightHand;
     private Transform LeftHand;
 
@@ -379,5 +380,10 @@ public class Player : MonoBehaviour
             UI_HandWeapons.Instance.SetAttackValueRight((int)mAttackControllerRight.GetAttackValue());
             UI_HandWeapons.Instance.SetDefenceValueRight((int)mAttackControllerRight.GetDefenceValue());
         }
+    }
+
+    public void CanvasSetActive(bool active)
+    {
+        MyCanvas.SetActive(active);
     }
 }

@@ -6,13 +6,13 @@ public class MagicEffects : MonoBehaviour
     public ParticleSystem mPrefabParticle;
     //ParticleSystem mParticleSystem;
     public List<ParticleCollisionEvent> mCollisionEvents;
-    [SerializeField]
-    ItemInfo mItem;
+    //[SerializeField]
+    //ItemInfo mItem;
     //Transform mSavedTransform;
     List<ParticleSystem> mParticleList = new List<ParticleSystem>();
     void Awake()
     {
-        mItem = transform.GetComponentInParent<ItemInfo>();
+        //mItem = transform.GetComponentInParent<ItemInfo>();
 
         //mPrefabParticle.startLifetime = 1.0f;
         //mParticleList.AddRange(Resources.LoadAll<ParticleSystem>("MagicEffectsFolder"));

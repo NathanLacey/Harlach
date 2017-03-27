@@ -34,8 +34,6 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     WeaponAttack Sword;
     [SerializeField]
-    Rigidbody MyRigidBody;
-    [SerializeField]
     WanderBehaviour WanderScript;
     [SerializeField]
     DamageTextController DamageText;
@@ -77,9 +75,17 @@ public class Enemy : MonoBehaviour
     public float AttackValue;
     [SerializeField]
     float DefenceValue;
+    AudioSource mDeathSound;
 
     void Start()
     {
+        mDeathSound = GetComponent<AudioSource>();
+        if (mDeathSound != null)
+        {
+            mDeathSound.playOnAwake = false;
+            mDeathSound.clip = AudioClips.Instance.mSkeletonDeath;
+        }
+
         DamageText = GetComponent<DamageTextController>();
         WanderScript = GetComponent<WanderBehaviour>();
         if (WanderScript)
@@ -89,7 +95,6 @@ public class Enemy : MonoBehaviour
         MyNavMeshAgent.stoppingDistance = AttackingDistance - 1.5f;
         Trigger.size = new Vector3(ViewDistance, ViewDistance * 0.9f, ViewDistance);
         HealthProperty = MaxHealth;
-        MyRigidBody = GetComponent<Rigidbody>();
         MyNavMeshAgent.updateRotation = true;
     }
 
@@ -191,7 +196,7 @@ public class Enemy : MonoBehaviour
             return;
         StartCoroutine(InvincibilityWindow(invincibilityTime));
         MyAnimator.SetTrigger("GetHit");
-        Debug.Log("Enemy Took damage: " + amount);
+        //Debug.Log("Enemy Took damage: " + amount);
         switch (damageType)
         {
             case DamageType.Melee_Instance:
@@ -222,6 +227,9 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        if(mDeathSound != null)
+            mDeathSound.Play();
+
         DeathEffect.Initialize(transform.position, transform.rotation);
         if (ItemDropped)
         {
